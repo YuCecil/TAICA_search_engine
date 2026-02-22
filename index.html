@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <base target="_top">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg: #e8e3d8;
+            --bg2: #f6f3ee;
+            --bg3: #ede9e0;
+            --bg4: #d5cec2;
+            --border: rgba(50, 32, 10, 0.10);
+            --border2: rgba(50, 32, 10, 0.18);
+            --t1: #1c1812;
+            --t2: #6b5e4e;
+            --t3: #a8967e;
+
+            /* indigo — primary selection / COOL (replaces cyan) */
+            --cyan: #2a4faa;
+            --cyan-dim: rgba(42, 79, 170, 0.08);
+            --cyan-glow: rgba(42, 79, 170, 0.20);
+
+            /* terracotta — host school / global links (replaces amber) */
+            --amber: #c24128;
+            --amber-dim: rgba(194, 65, 40, 0.08);
+
+            /* teal — mirror badge / copy-all (replaces purple) */
+            --purple: #1a6b74;
+            --purple-dim: rgba(26, 107, 116, 0.08);
+
+            /* olive — satellite badge / sheet (replaces green) */
+            --green: #4f7620;
+            --green-dim: rgba(79, 118, 32, 0.08);
+
+            /* error / filter indicator */
+            --red: #c24128;
+            --red-dim: rgba(194, 65, 40, 0.08);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: var(--bg);
+            color: var(--t1);
+        }
+
+        .no-select {
+            -webkit-user-select: none;
+            user-select: none;
+            cursor: default;
+        }
+
+        /* ── HEADER ── */
+        .hdr {
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 1px 6px rgba(50, 32, 10, 0.07);
+            flex-shrink: 0;
+            z-index: 50;
+            position: relative;
+        }
+
+        /* Institutional top-stripe */
+        .hdr::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #1a2f6e 0%, var(--cyan) 55%, var(--purple) 100%);
+        }
+
+        .hdr-inner {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .logo-wrap {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .logo-taica {
+            font-family: 'DM Serif Display', serif;
+            font-style: italic;
+            font-size: 25px;
+            letter-spacing: 0.06em;
+            color: #1a2f6e;
+            line-height: 1;
+        }
+
+        .logo-sep {
+            width: 1px;
+            height: 14px;
+            background: var(--border2);
+            flex-shrink: 0;
+            align-self: center;
+        }
+
+        .logo-cn {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--t2);
+            letter-spacing: 0.05em;
+        }
+
+        .hdr-search-wrap {
+            position: relative;
+            width: 260px;
+            flex-shrink: 0;
+        }
+
+        .hdr-search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--t3);
+            font-size: 11px;
+            pointer-events: none;
+        }
+
+        .hdr-search {
+            width: 100%;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--t1);
+            font-family: 'Noto Sans TC', sans-serif;
+            font-size: 12px;
+            padding: 7px 12px 7px 30px;
+            transition: border-color .18s, box-shadow .18s;
+        }
+
+        .hdr-search::placeholder {
+            color: var(--t3);
+        }
+
+        .hdr-search:focus {
+            border-color: rgba(42, 79, 170, .4);
+            box-shadow: 0 0 0 3px rgba(42, 79, 170, .08);
+            outline: none;
+        }
+
+        /* ── LAYOUT ── */
+        .main-wrap {
+            flex: 1;
+            overflow: hidden;
+            max-width: 1300px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            gap: 10px;
+            padding: 12px 16px;
+        }
+
+        .sidebar {
+            width: 216px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .content-col {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* ── PANEL ── */
+        .panel {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(50, 32, 10, 0.05);
+        }
+
+        /* ── SECTION LABEL ── */
+        .s-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: .13em;
+            text-transform: uppercase;
+            color: var(--t3);
+        }
+
+        /* ── TYPE FILTER ── */
+        .type-pill {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 3px 9px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--t2);
+            cursor: pointer;
+            transition: all .14s;
+        }
+
+        .type-pill:hover {
+            border-color: var(--border2);
+            color: var(--t1);
+            background: rgba(50, 32, 10, 0.05);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(50, 32, 10, .09);
+        }
+
+        .type-pill.on {
+            background: var(--cyan-dim);
+            border-color: rgba(42, 79, 170, .30);
+            color: var(--cyan);
+            box-shadow: 0 2px 10px rgba(42, 79, 170, .16);
+        }
+
+        /* ── COURSE LIST ── */
+        .ci {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 8px 13px;
+            border-bottom: 1px solid var(--border);
+            border-left: 2px solid transparent;
+            background: transparent;
+            cursor: pointer;
+            transition: background .12s, border-color .12s, transform .18s cubic-bezier(.34, 1.4, .64, 1);
+        }
+
+        .ci:focus {
+            outline: none;
+        }
+
+        .ci:hover {
+            background: rgba(50, 32, 10, 0.04);
+            border-left-color: var(--t3);
+            transform: translateX(3px);
+        }
+
+        .ci.on {
+            background: var(--cyan-dim);
+            border-left-color: var(--cyan);
+            transform: translateX(0);
+        }
+
+        .ci-name {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--t1);
+            line-height: 1.35;
+        }
+
+        .ci.on .ci-name {
+            color: var(--cyan);
+        }
+
+        .ci-type {
+            font-size: 10px;
+            color: var(--t3);
+            margin-top: 2px;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        /* ── GEN LINKS ── */
+        .gen-a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 8px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 11px;
+            color: var(--t2);
+            transition: background .12s, color .12s, transform .18s cubic-bezier(.34, 1.4, .64, 1);
+            cursor: context-menu;
+        }
+
+        .gen-a:hover {
+            background: rgba(50, 32, 10, 0.05);
+            color: var(--amber);
+            transform: translateX(4px);
+        }
+
+        .gen-arrow {
+            margin-left: auto;
+            font-size: 8px;
+            opacity: 0;
+            transition: opacity .12s, transform .18s;
+        }
+
+        .gen-a:hover .gen-arrow {
+            opacity: .6;
+            transform: translateX(2px);
+        }
+
+        /* ── COURSE HEADER ── */
+        .course-hdr {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--amber);
+            border-radius: 8px;
+            padding: 14px 16px;
+            flex-shrink: 0;
+            box-shadow: 0 1px 4px rgba(50, 32, 10, 0.05);
+        }
+
+        .course-tag {
+            display: inline-block;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 10px;
+            letter-spacing: .06em;
+            color: var(--amber);
+            background: var(--amber-dim);
+            border: 1px solid rgba(194, 65, 40, .20);
+            border-radius: 3px;
+            padding: 2px 7px;
+            margin-bottom: 6px;
+        }
+
+        .course-name-text {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--t1);
+            line-height: 1.3;
+            margin-bottom: 11px;
+        }
+
+        .glink-card {
+            display: flex;
+            align-items: center;
+            padding: 9px 13px;
+            background: var(--bg3);
+            border: 1px solid rgba(194, 65, 40, .18);
+            border-radius: 6px;
+            color: var(--amber);
+            text-decoration: none;
+            cursor: context-menu;
+            transition: background .16s, border-color .16s, transform .16s, box-shadow .16s;
+        }
+
+        .glink-card:hover {
+            background: var(--amber-dim);
+            border-color: rgba(194, 65, 40, .40);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(194, 65, 40, .15), 0 0 0 3px rgba(194, 65, 40, .06);
+        }
+
+        .glink-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 5px;
+            background: var(--amber-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            margin-right: 10px;
+            flex-shrink: 0;
+            transition: background .16s;
+        }
+
+        .glink-card:hover .glink-icon {
+            background: rgba(194, 65, 40, .14);
+        }
+
+        /* ── TOOLBAR ── */
+        .view-sw {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 3px;
+            display: flex;
+            gap: 2px;
+            box-shadow: 0 1px 4px rgba(50, 32, 10, 0.05);
+        }
+
+        .vbtn {
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--t2);
+            border: none;
+            background: transparent;
+            font-family: 'Noto Sans TC', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all .13s;
+        }
+
+        .vbtn:hover {
+            background: rgba(50, 32, 10, 0.05);
+            color: var(--t1);
+            transform: translateY(-1px);
+        }
+
+        .vbtn.vcard {
+            background: var(--cyan-dim);
+            color: var(--cyan);
+        }
+
+        .vbtn.vtable {
+            background: var(--purple-dim);
+            color: var(--purple);
+        }
+
+        /* ── BADGES ── */
+        .bdg {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: .04em;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .bdg-host {
+            background: var(--amber-dim);
+            color: var(--amber);
+            border: 1px solid rgba(194, 65, 40, .25);
+        }
+
+        .bdg-mirror {
+            background: var(--purple-dim);
+            color: var(--purple);
+            border: 1px solid rgba(26, 107, 116, .25);
+        }
+
+        .bdg-sat {
+            background: var(--green-dim);
+            color: var(--green);
+            border: 1px solid rgba(79, 118, 32, .25);
+        }
+
+        /* ── SCHOOL CARDS ── */
+        .scard {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 11px;
+            box-shadow: 0 1px 4px rgba(50, 32, 10, 0.05);
+            transition: border-color .22s, transform .22s cubic-bezier(.34, 1.3, .64, 1), box-shadow .22s;
+        }
+
+        .scard:hover {
+            border-color: var(--border2);
+            transform: translateY(-5px);
+            box-shadow: 0 16px 40px rgba(50, 32, 10, .12), 0 4px 12px rgba(50, 32, 10, .06);
+        }
+
+        .scard.is-host {
+            border-color: rgba(194, 65, 40, .22);
+            border-left: 3px solid var(--amber);
+            box-shadow: 0 1px 4px rgba(50, 32, 10, .05), -2px 0 14px rgba(194, 65, 40, .08);
+        }
+
+        .scard.is-host:hover {
+            border-color: rgba(194, 65, 40, .42);
+            transform: translateY(-5px);
+            box-shadow: 0 16px 40px rgba(194, 65, 40, .14), 0 4px 12px rgba(194, 65, 40, .08), -2px 0 18px rgba(194, 65, 40, .10);
+        }
+
+        .scard-div {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* ── LINK ITEMS ── */
+        .li {
+            display: flex;
+            align-items: center;
+            padding: 5px 8px;
+            border-radius: 5px;
+            font-size: 11px;
+            text-decoration: none;
+            transition: background .12s, color .12s, box-shadow .12s, transform .16s;
+        }
+
+        .li.la {
+            color: var(--t2);
+            cursor: context-menu;
+        }
+
+        .li.la:hover {
+            background: rgba(42, 79, 170, .07);
+            color: var(--cyan);
+            box-shadow: inset 0 0 0 1px rgba(42, 79, 170, .14);
+            transform: translateX(2px);
+        }
+
+        .li.ld {
+            color: var(--t3);
+            cursor: not-allowed;
+        }
+
+        .li-ic {
+            width: 15px;
+            text-align: center;
+            flex-shrink: 0;
+            font-size: 10px;
+            margin-right: 7px;
+        }
+
+        .li-chev {
+            margin-left: auto;
+            font-size: 9px;
+            color: var(--t3);
+        }
+
+        /* ── TABLE CTRL ── */
+        .tbl-ctrl {
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            padding: 8px 13px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .tgt-grp {
+            display: flex;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 3px;
+            gap: 2px;
+        }
+
+        .tgt-btn {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 4px 11px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: var(--t2);
+            border: none;
+            background: transparent;
+            font-family: 'Noto Sans TC', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all .12s;
+        }
+
+        .tgt-btn:hover {
+            background: rgba(50, 32, 10, 0.05);
+            color: var(--t1);
+            transform: translateY(-1px);
+        }
+
+        .tgt-btn.tc {
+            background: var(--cyan-dim);
+            color: var(--cyan);
+        }
+
+        .tgt-btn.tf {
+            background: var(--amber-dim);
+            color: var(--amber);
+        }
+
+        .tgt-btn.ts {
+            background: var(--green-dim);
+            color: var(--green);
+        }
+
+        .tgt-btn.tm {
+            background: var(--purple-dim);
+            color: var(--purple);
+        }
+
+        .copy-all-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--purple-dim);
+            color: var(--purple);
+            border: 1px solid rgba(26, 107, 116, .28);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 5px 13px;
+            border-radius: 6px;
+            font-family: 'Noto Sans TC', sans-serif;
+            cursor: pointer;
+            transition: all .14s;
+        }
+
+        .copy-all-btn:hover {
+            background: rgba(26, 107, 116, .14);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 18px rgba(26, 107, 116, .22);
+        }
+
+        /* ── TABLE ── */
+        .dtbl {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .dtbl thead th {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: var(--bg2);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--t3);
+            padding: 9px 11px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .dtbl tbody tr {
+            border-bottom: 1px solid var(--border);
+            border-left: 2px solid transparent;
+            cursor: pointer;
+            transition: background .09s, box-shadow .14s;
+        }
+
+        .dtbl tbody tr:hover {
+            background: rgba(42, 79, 170, .04);
+            box-shadow: inset 3px 0 0 rgba(42, 79, 170, .28);
+        }
+
+        .dtbl tbody tr.tr-on {
+            background: var(--cyan-dim) !important;
+            border-left-color: var(--cyan) !important;
+        }
+
+        .dtbl tbody tr.tr-off {
+            opacity: .32;
+            cursor: not-allowed;
+        }
+
+        .dtbl tbody tr {
+            height: 36px;
+        }
+
+        .dtbl tbody td {
+            padding: 8px 11px;
+            vertical-align: middle;
+        }
+
+        .row-open {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 3px 7px;
+            color: var(--cyan);
+            font-size: 10px;
+            opacity: 0;
+            transition: opacity .13s, background .15s, color .15s, border-color .15s;
+            text-decoration: none;
+        }
+
+        .dtbl tbody tr:hover .row-open {
+            opacity: 1;
+        }
+
+        .row-open:hover {
+            background: var(--cyan);
+            color: #fff;
+            border-color: var(--cyan);
+        }
+
+        /* ── FLOAT COPY ── */
+        .fcopy {
+            position: fixed;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg2);
+            border: 1px solid rgba(42, 79, 170, .35);
+            box-shadow: 0 8px 32px rgba(42, 79, 170, .16), 0 4px 16px rgba(50, 32, 10, .10);
+            color: var(--cyan);
+            padding: 10px 22px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 50;
+            cursor: pointer;
+            transition: transform .18s, box-shadow .18s;
+        }
+
+        .fcopy:hover {
+            transform: translateX(-50%) scale(1.04) translateY(-2px);
+            box-shadow: 0 16px 48px rgba(42, 79, 170, .28), 0 4px 16px rgba(50, 32, 10, .12), 0 0 0 4px rgba(42, 79, 170, .08);
+        }
+
+        /* ── TOAST ── */
+        .toast-box {
+            position: fixed;
+            bottom: 22px;
+            right: 22px;
+            z-index: 50;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 18px;
+            box-shadow: 0 8px 32px rgba(50, 32, 10, .12);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--t1);
+        }
+
+        /* ── LOADER ── */
+        .spin-ring {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid var(--border2);
+            border-top-color: var(--cyan);
+            animation: spn .72s linear infinite;
+        }
+
+        @keyframes spn {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── TRANSITIONS ── */
+        .toast-enter-active {
+            transition: all .3s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        .toast-leave-active {
+            transition: all .2s ease;
+        }
+
+        .toast-enter-from,
+        .toast-leave-to {
+            opacity: 0;
+            transform: translateY(10px) scale(.94);
+        }
+
+        /* ── SCROLLBAR ── */
+        .cscroll::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+
+        .cscroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .cscroll::-webkit-scrollbar-thumb {
+            background: var(--bg4);
+            border-radius: 2px;
+        }
+
+        .cscroll::-webkit-scrollbar-thumb:hover {
+            background: var(--t3);
+        }
+
+        /* ── EMPTY / DASHED ── */
+        .empty-pane {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 1px dashed var(--border2);
+            border-radius: 8px;
+            color: var(--t3);
+        }
+    </style>
+</head>
+
+<body class="h-screen overflow-hidden flex flex-col no-select">
+    <div id="app" class="h-full flex flex-col">
+
+        <!-- ── HEADER ── -->
+        <header class="hdr">
+            <div class="hdr-inner">
+                <div class="logo-wrap">
+                    <span class="logo-taica">TAICA</span>
+                    <div class="logo-sep"></div>
+                    <span class="logo-cn">課程連結查詢系統</span>
+                </div>
+                <div class="hdr-search-wrap">
+                    <i class="fa-solid fa-magnifying-glass hdr-search-icon"></i>
+                    <input v-model="searchKeyword" type="text" placeholder="搜尋學校名稱…" class="hdr-search" @keydown.stop>
+                </div>
+            </div>
+        </header>
+
+        <!-- ── LOADING ── -->
+        <div v-if="loading"
+            style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;">
+            <div class="spin-ring"></div>
+            <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--t2);">載入資料中…</p>
+            <p v-if="useMockData" style="font-size:10px;color:var(--amber);font-family:'IBM Plex Mono',monospace;">[
+                test mode ]</p>
+        </div>
+
+        <!-- ── MAIN ── -->
+        <div v-else class="main-wrap">
+
+            <!-- Sidebar -->
+            <aside class="sidebar">
+
+                <!-- Type filter -->
+                <div class="panel" style="padding:11px;flex-shrink:0;">
+                    <span class="s-label" style="margin-bottom:7px;display:block;">課程類型</span>
+                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                        <button v-for="type in courseTypes" @click="selectType(type)"
+                            :class="['type-pill', selectedType === type ? 'on' : '']">
+                            {{ type }}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Course list -->
+                <div class="panel" style="flex:1;overflow:hidden;display:flex;flex-direction:column;">
+                    <div style="padding:9px 13px 7px;border-bottom:1px solid var(--border);flex-shrink:0;">
+                        <span class="s-label">選擇課程</span>
+                    </div>
+                    <div class="cscroll" style="overflow-y:auto;flex:1;">
+                        <div v-if="filteredCourses.length === 0"
+                            style="padding:18px;text-align:center;font-size:11px;color:var(--t3);font-family:'IBM Plex Mono',monospace;">
+                            // empty
+                        </div>
+                        <button v-for="course in filteredCourses" @click="selectCourse(course)"
+                            :class="['ci', selectedCourse?.id === course.id ? 'on' : '']">
+                            <div class="ci-name">{{ course.name }}</div>
+                            <div class="ci-type">{{ course.type }}</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- General links -->
+                <div class="panel"
+                    style="flex-shrink:0;overflow:hidden;display:flex;flex-direction:column;max-height:32vh;">
+                    <div style="padding:8px 11px 6px;border-bottom:1px solid var(--border);flex-shrink:0;">
+                        <span class="s-label">常用資源</span>
+                    </div>
+                    <div class="cscroll" style="overflow-y:auto;flex:1;padding:5px 8px 7px;">
+                        <div style="display:flex;flex-direction:column;gap:1px;">
+                            <a v-for="link in generalLinks" :key="link.name" :href="link.url" target="_blank"
+                                @contextmenu.prevent="handleRightClickCopy(link.url)" class="gen-a" title="左鍵開啟，右鍵複製連結">
+                                <i :class="[link.icon]"
+                                    style="width:13px;text-align:center;flex-shrink:0;font-size:10px;color:var(--t3);"></i>
+                                <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{
+                                    link.name }}</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square gen-arrow"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </aside>
+
+            <!-- Content -->
+            <section class="content-col">
+
+                <div v-if="!selectedCourse" class="empty-pane">
+                    <i class="fa-regular fa-hand-point-left" style="font-size:26px;"></i>
+                    <p style="font-size:12px;color:var(--t2);">請從左側選擇課程</p>
+                </div>
+
+                <div v-else style="display:flex;flex-direction:column;height:100%;gap:8px;">
+
+                    <!-- Course header -->
+                    <div class="course-hdr">
+                        <div class="course-tag">{{ selectedCourse.type }}</div>
+                        <h2 class="course-name-text">{{ selectedCourse.name }}</h2>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:7px;">
+                            <a v-for="link in selectedCourse.globalLinks" :href="link.url" target="_blank"
+                                @contextmenu.prevent="handleRightClickCopy(link.url)" class="glink-card"
+                                title="左鍵開啟，右鍵複製">
+                                <div class="glink-icon"><i class="fa-solid fa-star" style="font-size:11px;"></i></div>
+                                <div style="flex:1;min-width:0;">
+                                    <div
+                                        style="font-weight:700;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                                        {{ link.name }}</div>
+                                    <div
+                                        style="font-size:9px;opacity:.5;margin-top:1px;font-family:'IBM Plex Mono',monospace;">
+                                        右鍵複製連結</div>
+                                </div>
+                                <i class="fa-solid fa-external-link-alt"
+                                    style="font-size:9px;opacity:.35;margin-left:8px;flex-shrink:0;"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Toolbar -->
+                    <div
+                        style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span style="font-size:11px;font-weight:700;color:var(--t2);">各校連結</span>
+                            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--t3);">({{
+                                filteredSchools.length }})</span>
+                            <span v-if="searchKeyword" style="font-size:10px;color:var(--red);">
+                                <i class="fa-solid fa-filter" style="font-size:9px;"></i> "{{ searchKeyword }}"
+                            </span>
+                        </div>
+                        <div v-if="filteredSchools.length > 0" class="view-sw">
+                            <button @click="viewMode = 'card'" :class="['vbtn', viewMode==='card' ? 'vcard' : '']">
+                                <i class="fa-solid fa-grid-2" style="font-size:10px;"></i>卡片
+                            </button>
+                            <button @click="viewMode = 'table'" :class="['vbtn', viewMode==='table' ? 'vtable' : '']">
+                                <i class="fa-solid fa-table-list" style="font-size:10px;"></i>批量複製
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Data area -->
+                    <div
+                        style="flex:1;overflow:hidden;min-height:0;background:var(--bg2);border-radius:8px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(50,32,10,0.05);">
+
+                        <div v-if="filteredSchools.length === 0"
+                            style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--t3);">
+                            <i class="fa-solid fa-inbox" style="font-size:22px;"></i>
+                            <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;">// no results</p>
+                        </div>
+
+                        <!-- Card view -->
+                        <div v-else-if="viewMode === 'card'" class="cscroll h-full"
+                            style="overflow-y:auto;padding:12px;">
+                            <div
+                                style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px;">
+                                <div v-for="item in filteredSchools" :key="item.school"
+                                    :class="['scard', item.isHost ? 'is-host' : '']">
+                                    <div class="scard-div">
+                                        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                                            <span style="font-size:12px;font-weight:700;color:var(--t1);">{{ item.school
+                                                }}</span>
+                                            <span v-if="item.isHost" class="bdg bdg-host">
+                                                <i class="fa-solid fa-crown" style="font-size:8px;"></i>開課
+                                            </span>
+                                        </div>
+                                        <span :class="['bdg', item.role==='鏡像' ? 'bdg-mirror' : 'bdg-sat']">{{ item.role
+                                            }}</span>
+                                    </div>
+                                    <div style="display:flex;flex-direction:column;gap:2px;">
+                                        <a v-for="link in item.links" :href="link.disabled ? null : link.url"
+                                            :class="['li', link.disabled ? 'ld' : 'la']"
+                                            :target="link.disabled ? null : '_blank'"
+                                            @click="link.disabled && $event.preventDefault()"
+                                            @contextmenu.prevent="!link.disabled && handleRightClickCopy(link.url)"
+                                            :title="link.disabled ? '無效連結' : '左鍵開啟，右鍵複製'">
+                                            <i v-if="link.type==='folder'" class="fa-regular fa-folder-open li-ic"
+                                                :style="link.disabled?'color:var(--t3)':'color:var(--amber)'"></i>
+                                            <i v-else-if="link.type==='sheet'" class="fa-solid fa-table li-ic"
+                                                :style="link.disabled?'color:var(--t3)':'color:var(--green)'"></i>
+                                            <i v-else-if="link.type==='cool'" class="fa-solid fa-graduation-cap li-ic"
+                                                :style="link.disabled?'color:var(--t3)':'color:var(--cyan)'"></i>
+                                            <i v-else class="fa-solid fa-link li-ic" style="color:var(--t3);"></i>
+                                            <span
+                                                style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{
+                                                link.label }}</span>
+                                            <i v-if="!link.disabled" class="fa-solid fa-chevron-right li-chev"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Table view -->
+                        <div v-else style="height:100%;display:flex;flex-direction:column;">
+                            <div class="tbl-ctrl">
+                                <div style="display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap;">
+                                    <span
+                                        style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;color:var(--purple);letter-spacing:.1em;">TARGET</span>
+                                    <div class="tgt-grp">
+                                        <template v-if="selectedCourse?.type !== '鏡像課程'">
+                                            <button @click="setTableTarget('cool')"
+                                                :class="['tgt-btn', tableTarget==='cool'?'tc':'']">
+                                                <i class="fa-solid fa-graduation-cap" style="font-size:9px;"></i>COOL
+                                            </button>
+                                            <div style="width:1px;background:var(--border);margin:2px 0;"></div>
+                                        </template>
+                                        <button @click="setTableTarget('folder')"
+                                            :class="['tgt-btn', tableTarget==='folder'?'tf':'']">
+                                            <i class="fa-regular fa-folder-open" style="font-size:9px;"></i>資料夾
+                                        </button>
+                                        <div style="width:1px;background:var(--border);margin:2px 0;"></div>
+                                        <button @click="setTableTarget('sheet')"
+                                            :class="['tgt-btn', tableTarget==='sheet'?'ts':'']">
+                                            <i class="fa-solid fa-table" style="font-size:9px;"></i>分頁
+                                        </button>
+                                    </div>
+                                    <template v-if="selectedCourse?.type === '混合課程'">
+                                        <div style="width:1px;height:18px;background:var(--border2);flex-shrink:0;">
+                                        </div>
+                                        <span
+                                            style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.1em;">ROLE</span>
+                                        <div class="tgt-grp">
+                                            <button @click="setRoleFilter('全部')"
+                                                :class="['tgt-btn', roleFilter==='全部'?'tc':'']">全部</button>
+                                            <div style="width:1px;background:var(--border);margin:2px 0;"></div>
+                                            <button @click="setRoleFilter('鏡像')"
+                                                :class="['tgt-btn', roleFilter==='鏡像'?'tm':'']">
+                                                <i class="fa-solid fa-circle-half-stroke" style="font-size:9px;"></i>鏡像
+                                            </button>
+                                            <div style="width:1px;background:var(--border);margin:2px 0;"></div>
+                                            <button @click="setRoleFilter('衛星')"
+                                                :class="['tgt-btn', roleFilter==='衛星'?'ts':'']">
+                                                <i class="fa-solid fa-satellite-dish" style="font-size:9px;"></i>衛星
+                                            </button>
+                                        </div>
+                                    </template>
+                                </div>
+                                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                                    <span
+                                        style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--t3);">drag
+                                        · shift · ctrl+c</span>
+                                    <span v-if="tableSelection.size > 0"
+                                        style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;background:var(--cyan-dim);padding:3px 9px;border-radius:4px;border:1px solid rgba(42,79,170,.28);color:var(--cyan);">
+                                        {{ tableSelection.size }} selected
+                                    </span>
+                                    <button @click="copyAllLinks" class="copy-all-btn">
+                                        <i class="fa-regular fa-copy"></i>全部複製 ({{ filteredSchools.length }})
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div ref="tableContainer" class="cscroll" style="flex:1;overflow:auto;">
+                                <table class="dtbl">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:42px;text-align:center;">
+                                                <input type="checkbox" :checked="allSelected"
+                                                    :indeterminate.prop="someSelected" @change="toggleSelectAll"
+                                                    @mousedown.stop
+                                                    style="cursor:pointer;accent-color:var(--cyan);width:13px;height:13px;vertical-align:middle;">
+                                            </th>
+                                            <th style="width:32%;">學校</th>
+                                            <th>
+                                                <span v-if="tableTarget==='cool'"><i class="fa-solid fa-graduation-cap"
+                                                        style="color:var(--cyan);margin-right:4px;font-size:9px;"></i>COOL</span>
+                                                <span v-else-if="tableTarget==='folder'"><i
+                                                        class="fa-regular fa-folder-open"
+                                                        style="color:var(--amber);margin-right:4px;font-size:9px;"></i>資料夾</span>
+                                                <span v-else><i class="fa-solid fa-table"
+                                                        style="color:var(--green);margin-right:4px;font-size:9px;"></i>分頁</span>
+                                                <span style="color:var(--t3);">/ url</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(item, index) in filteredSchools" :key="item.school"
+                                            @mousedown="handleMouseDown(index, $event, item)"
+                                            @mouseenter="handleMouseEnter(index, item)"
+                                            :class="[isRowSelected(index)?'tr-on':'', getTargetLink(item)?.disabled?'tr-off':'']">
+                                            <td
+                                                style="text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--t3);">
+                                                {{ index+1 }}</td>
+                                            <td>
+                                                <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
+                                                    <span style="font-weight:600;font-size:12px;"
+                                                        :style="isRowSelected(index)?'color:var(--cyan)':'color:var(--t1)'">{{
+                                                        item.school }}</span>
+                                                    <span v-if="item.isHost" class="bdg bdg-host">開課</span>
+                                                    <span :class="['bdg', item.role==='鏡像'?'bdg-mirror':'bdg-sat']">{{
+                                                        item.role }}</span>
+                                                </div>
+                                            </td>
+                                            <td style="position:relative;" class="group">
+                                                <template v-if="getTargetLink(item)">
+                                                    <span
+                                                        style="font-family:'IBM Plex Mono',monospace;font-size:10px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:400px;"
+                                                        :style="isRowSelected(index)?'color:var(--cyan)':'color:var(--t3)'">
+                                                        {{ getTargetLink(item).disabled ? '— 無有效連結 —' :
+                                                        getTargetLink(item).url }}
+                                                    </span>
+                                                    <a v-if="!getTargetLink(item).disabled"
+                                                        :href="getTargetLink(item).url" target="_blank" class="row-open"
+                                                        title="在新分頁開啟" @mousedown.stop>
+                                                        <i class="fa-solid fa-external-link-alt"></i>
+                                                    </a>
+                                                </template>
+                                                <span v-else
+                                                    style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--t3);display:block;">—</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+        </div><!-- /main-wrap -->
+
+        <!-- Float copy -->
+        <transition name="toast">
+            <div v-if="viewMode==='table' && tableSelection.size > 0" class="fcopy" @click="copyTableSelection">
+                <i class="fa-regular fa-copy" style="font-size:13px;"></i>
+                <span style="font-weight:700;font-size:13px;">複製 {{ tableSelection.size }} 個{{ targetLabel }}</span>
+                <span
+                    style="font-family:'IBM Plex Mono',monospace;font-size:10px;background:var(--cyan-dim);border:1px solid rgba(42,79,170,.28);padding:2px 9px;border-radius:20px;">ctrl+c</span>
+            </div>
+        </transition>
+
+        <!-- Toast -->
+        <transition name="toast">
+            <div v-if="showToast" class="toast-box">
+                <i class="fa-solid fa-circle-check" style="color:var(--green);font-size:13px;"></i>
+                <span>{{ toastMessage }}</span>
+            </div>
+        </transition>
+
+    </div>
+
+    <script>
+        const { createApp, ref, computed, onMounted, onUnmounted, reactive } = Vue;
+
+        // 混合課程卡片模式學校顯示順序
+        const SCHOOL_ORDER = [
+            '國立政治大學', '國立清華大學', '國立臺灣大學', '國立臺灣師範大學', '國立成功大學',
+            '國立中興大學', '國立陽明交通大學', '國立中央大學', '國立中山大學', '國立臺灣海洋大學',
+            '國立中正大學', '國立高雄師範大學', '國立彰化師範大學', '國立臺北大學', '國立嘉義大學',
+            '國立高雄大學', '國立東華大學', '國立臺灣科技大學', '國立雲林科技大學', '國立臺北科技大學',
+            '國立宜蘭大學', '國立聯合大學', '國立虎尾科技大學', '國立臺南大學', '國立勤益科技大學',
+            '國立金門大學', '國立臺中科技大學', '國立高雄科技大學', '國立空中大學', '東海大學',
+            '輔仁大學', '東吳大學', '中原大學', '淡江大學', '逢甲大學', '靜宜大學', '長庚大學',
+            '元智大學', '銘傳大學', '實踐大學', '朝陽科技大學', '高雄醫學大學', '大同大學',
+            '南臺科技大學', '崑山科技大學', '慈濟大學', '臺北醫學大學', '龍華科技大學', '長榮大學',
+            '中國醫藥大學', '正修科技大學', '明志科技大學', '亞洲大學', '開南大學', '致理科技大學'
+        ];
+        const schoolOrderIndex = (name) => {
+            const n = name.replace(/台/g, '臺');
+            const i = SCHOOL_ORDER.findIndex(s => s === n);
+            return i === -1 ? SCHOOL_ORDER.length : i;
+        };
+
+        createApp({
+            setup() {
+                const loading = ref(true);
+                const useMockData = ref(false);
+                const allData = ref([]);
+                const courseTypes = ['全部', '鏡像課程', '衛星課程', '混合課程'];
+                const selectedType = ref('全部');
+                const selectedCourse = ref(null);
+                const searchKeyword = ref('');
+                const viewMode = ref('card');
+
+                // 常用資源連結 (從後端「常用資源」工作表載入，以下為預設值)
+                const generalLinks = ref([
+                    { name: '教師/助教/承辦聯繫資訊', url: 'https://docs.google.com/spreadsheets/d/1A3ap2U9vvHZlQSUpfmp3WcIf6m-BTc54NOxTBkD9jwo/edit?gid=676285020#gid=676285020', icon: 'fa-solid fa-address-book', color: 'text-green-600' },
+                    { name: '信件生成工具', url: 'https://yucecil.github.io/mail-generate/mailgenerate.html', icon: 'fa-solid fa-envelope-open-text', color: 'text-red-500' },
+                    { name: '多開工具', url: 'https://yucecil.github.io/ntu-cool-mutiopen/%E5%A4%9A%E9%96%8B%E7%B6%B2%E9%A0%81.html', icon: 'fa-solid fa-rocket', color: 'text-purple-600' },
+                    { name: '修課人數統計', url: 'https://docs.google.com/spreadsheets/d/1s0Oh-y-Pqaij1wFLktqm6DdggoRvXSx-Wnde5l_Ie7E/edit?usp=drive_link', icon: 'fa-solid fa-chart-simple', color: 'text-emerald-600' },
+                    { name: '混合鏡像人數統計', url: 'https://docs.google.com/spreadsheets/d/1mqKe4PRdBZtojd2iTmvG1Ydrnwd8vwOtX2_R5zQwI8s/edit?usp=drive_link', icon: 'fa-solid fa-chart-pie', color: 'text-teal-600' },
+                    { name: '加退選SOP', url: 'https://docs.google.com/document/d/1gGFJMbTWzdWOatxJTOfNnqZ9GndO5AXL2wMm8nIqyZA/edit?tab=t.0#heading=h.eu619a7iml75', icon: 'fa-solid fa-clipboard-list', color: 'text-blue-700' },
+                    { name: '新手村', url: 'https://cool.ntu.edu.tw/courses/58787', icon: 'fa-solid fa-gamepad', color: 'text-blue-500' },
+                    { name: '生成式 AI 的人文導論_交流課程', url: 'https://cool.ntu.edu.tw/courses/58791', icon: 'fa-solid fa-comments', color: 'text-indigo-500' },
+                    { name: '人工智慧倫理_交流課程', url: 'https://cool.ntu.edu.tw/courses/58792', icon: 'fa-solid fa-comments', color: 'text-indigo-500' },
+                    { name: '機器導航與探索_交流課程', url: 'https://cool.ntu.edu.tw/courses/58793', icon: 'fa-solid fa-comments', color: 'text-indigo-500' }
+                ]);
+
+                const tableContainer = ref(null);
+                const tableSelection = reactive(new Set());
+                const isDragging = ref(false);
+                const dragStartIndex = ref(-1);
+                const selectionAnchor = ref(-1);
+                const snapshotSelection = ref(new Set());
+                const isCtrlDrag = ref(false);
+                const currentScrollSpeed = ref(0);
+                const tableTarget = ref('cool');
+                const roleFilter = ref('全部');
+
+                let autoScrollInterval = null;
+                const showToast = ref(false);
+                const toastMessage = ref('');
+
+                const showToastMsg = (msg) => {
+                    toastMessage.value = msg;
+                    showToast.value = true;
+                    setTimeout(() => { showToast.value = false; }, 3000);
+                };
+
+                // ↓ 填入 GAS 部署網址（重新部署後更新此處）
+                const GAS_URL = 'https://script.google.com/macros/s/AKfycbxvSw5VLnKAGcUe3-WNTualJ8kx27HltkhIwJvuktNkE92DG-ZA1iaTZtiL2e7pWnts/exec';
+
+                const SCACHE_KEY = 'taica_v1';
+
+                const applyData = (parsed) => {
+                    allData.value = parsed.courses;
+                    if (parsed.generalLinks && parsed.generalLinks.length > 0) {
+                        generalLinks.value = parsed.generalLinks;
+                    }
+                    loading.value = false;
+                };
+
+                const fetchData = () => {
+                    // 1. 先查 sessionStorage — 命中時資料瞬間顯示，跳過 GAS 呼叫
+                    try {
+                        const cached = sessionStorage.getItem(SCACHE_KEY);
+                        if (cached) {
+                            applyData(JSON.parse(cached));
+                            return;
+                        }
+                    } catch (e) {
+                        sessionStorage.removeItem(SCACHE_KEY);
+                    }
+
+                    // 2. 尚未設定 GAS URL → 切換測試模式
+                    if (!GAS_URL || GAS_URL === 'YOUR_GAS_DEPLOY_URL') {
+                        console.warn('GAS URL 未設定，載入測試資料。');
+                        useMockData.value = true;
+                        loadMockData();
+                        return;
+                    }
+
+                    // 3. 呼叫 GAS API
+                    fetch(GAS_URL)
+                        .then(r => r.text())
+                        .then(text => {
+                            try { sessionStorage.setItem(SCACHE_KEY, text); } catch (e) { }
+                            applyData(JSON.parse(text));
+                        })
+                        .catch(error => {
+                            console.error('API 呼叫失敗，載入測試資料：', error);
+                            alert('讀取資料失敗，將切換至測試模式: ' + error);
+                            useMockData.value = true;
+                            loadMockData();
+                        });
+                };
+
+                const loadMockData = () => {
+                    setTimeout(() => {
+                        allData.value = [
+                            {
+                                id: "mock1", type: "鏡像課程", name: "智慧製造執行系統",
+                                globalLinks: [{ name: "名單總表", url: "https://docs.google.com/spreadsheets/example" }],
+                                schools: [
+                                    { school: "國立成功大學", isHost: true, role: "鏡像", links: [{ type: "folder", url: "#folder1", label: "Folder" }, { type: "cool", url: "https://cool.ntu.edu.tw/courses/mock1", label: "COOL" }, { type: "sheet", url: "#sheet1", label: "Sheet" }] },
+                                    { school: "龍華科技大學", isHost: false, role: "鏡像", links: [{ type: "cool", url: "https://cool.ntu.edu.tw/courses/mock2", label: "COOL" }, { type: "folder", url: "#folder2", label: "Folder" }] },
+                                    { school: "長榮大學", isHost: false, role: "鏡像", links: [{ type: "cool", url: "https://cool.ntu.edu.tw/courses/mock3", label: "COOL" }] }
+                                ]
+                            },
+                            {
+                                id: "mock2", type: "衛星課程", name: "人工智慧倫理",
+                                globalLinks: [{ name: "名單總表", url: "https://docs.google.com/spreadsheets/example2" }],
+                                schools: [
+                                    { school: "東海大學", isHost: true, role: "衛星", links: [{ type: "cool", url: "#", label: "COOL", disabled: true }, { type: "folder", url: "#folderA", label: "Folder" }] },
+                                    { school: "國立臺灣大學", isHost: false, role: "衛星", links: [{ type: "cool", url: "#", label: "COOL", disabled: true }] },
+                                    { school: "靜宜大學", isHost: false, role: "衛星", links: [{ type: "cool", url: "https://cool.ntu.edu.tw/courses/mock6", label: "COOL" }] }
+                                ]
+                            }
+                        ];
+                        loading.value = false;
+                    }, 800);
+                };
+
+                const filteredCourses = computed(() => {
+                    if (selectedType.value === '全部') return allData.value;
+                    return allData.value.filter(c => c.type === selectedType.value);
+                });
+
+                const filteredSchools = computed(() => {
+                    if (!selectedCourse.value) return [];
+                    let schools = selectedCourse.value.schools;
+                    if (searchKeyword.value.trim() !== '') {
+                        const normalize = (str) => str.replace(/台/g, '臺').toLowerCase();
+                        const keyword = normalize(searchKeyword.value);
+                        schools = schools.filter(s => normalize(s.school).includes(keyword));
+                    }
+                    if (viewMode.value === 'table' && selectedCourse.value.type === '混合課程' && roleFilter.value !== '全部') {
+                        schools = schools.filter(s => s.role === roleFilter.value);
+                    }
+                    // 混合課程卡片模式依指定順序排列
+                    if (viewMode.value === 'card' && selectedCourse.value.type === '混合課程') {
+                        schools = [...schools].sort((a, b) => schoolOrderIndex(a.school) - schoolOrderIndex(b.school));
+                    }
+                    return schools;
+                });
+
+                const getTargetLink = (item) => item.links.find(l => l.type === tableTarget.value);
+
+                const targetLabel = computed(() => {
+                    if (tableTarget.value === 'cool') return 'COOL';
+                    if (tableTarget.value === 'folder') return '資料夾';
+                    if (tableTarget.value === 'sheet') return '分頁';
+                    return '';
+                });
+
+                const selectType = (type) => {
+                    selectedType.value = type;
+                    selectedCourse.value = null;
+                    viewMode.value = 'card';
+                    tableSelection.clear();
+                    roleFilter.value = '全部';
+                };
+
+                const selectCourse = (course) => {
+                    selectedCourse.value = course;
+                    viewMode.value = 'card';
+                    tableSelection.clear();
+                    tableTarget.value = course.type === '鏡像課程' ? 'folder' : 'cool';
+                    roleFilter.value = '全部';
+                };
+
+                const setTableTarget = (target) => {
+                    tableTarget.value = target;
+                    tableSelection.clear();
+                };
+
+                const setRoleFilter = (role) => {
+                    roleFilter.value = role;
+                    tableSelection.clear();
+                };
+
+                const allSelectableIndices = computed(() =>
+                    filteredSchools.value
+                        .map((item, i) => isRowSelectable(item) ? i : -1)
+                        .filter(i => i !== -1)
+                );
+                const allSelected = computed(() => {
+                    const sel = allSelectableIndices.value;
+                    return sel.length > 0 && sel.every(i => tableSelection.has(i));
+                });
+                const someSelected = computed(() =>
+                    tableSelection.size > 0 && !allSelected.value
+                );
+                const toggleSelectAll = () => {
+                    if (allSelected.value) {
+                        tableSelection.clear();
+                    } else {
+                        allSelectableIndices.value.forEach(i => tableSelection.add(i));
+                    }
+                    selectionAnchor.value = -1;
+                };
+
+                const handleRightClickCopy = async (url) => {
+                    if (!url || url === '#' || url === '') return;
+                    await copyToClipboard(url, 1, true);
+                };
+
+                const isRowSelectable = (item) => {
+                    const link = getTargetLink(item);
+                    return link && !link.disabled;
+                };
+
+                const isRowSelected = (index) => tableSelection.has(index);
+
+                const handleMouseDown = (index, event, item) => {
+                    if (!isRowSelectable(item)) return;
+                    if (event.shiftKey) {
+                        event.preventDefault();
+                        const start = selectionAnchor.value === -1 ? index : selectionAnchor.value;
+                        tableSelection.clear();
+                        const [min, max] = [Math.min(start, index), Math.max(start, index)];
+                        for (let i = min; i <= max; i++) {
+                            if (isRowSelectable(filteredSchools.value[i])) tableSelection.add(i);
+                        }
+                        return;
+                    }
+                    isDragging.value = true;
+                    dragStartIndex.value = index;
+                    if (event.ctrlKey || event.metaKey) {
+                        isCtrlDrag.value = true;
+                        selectionAnchor.value = index;
+                        if (tableSelection.has(index)) tableSelection.delete(index);
+                        else tableSelection.add(index);
+                        snapshotSelection.value = new Set(tableSelection);
+                        snapshotSelection.value.add(index);
+                    } else {
+                        isCtrlDrag.value = false;
+                        selectionAnchor.value = index;
+                        tableSelection.clear();
+                        tableSelection.add(index);
+                        snapshotSelection.value = new Set();
+                    }
+                };
+
+                const handleMouseEnter = (index, item) => {
+                    if (!isDragging.value) return;
+                    const [min, max] = [Math.min(dragStartIndex.value, index), Math.max(dragStartIndex.value, index)];
+                    if (isCtrlDrag.value) {
+                        tableSelection.clear();
+                        snapshotSelection.value.forEach(i => tableSelection.add(i));
+                        for (let i = min; i <= max; i++) {
+                            if (isRowSelectable(filteredSchools.value[i])) tableSelection.add(i);
+                        }
+                    } else {
+                        tableSelection.clear();
+                        for (let i = min; i <= max; i++) {
+                            if (isRowSelectable(filteredSchools.value[i])) tableSelection.add(i);
+                        }
+                    }
+                };
+
+                const onGlobalMouseMove = (e) => {
+                    if (!isDragging.value || !tableContainer.value) return;
+                    const { top, bottom } = tableContainer.value.getBoundingClientRect();
+                    const threshold = 50, maxSpeed = 30;
+                    let speed = 0;
+                    if (e.clientY < top + threshold) speed = -maxSpeed * ((top + threshold - e.clientY) / threshold);
+                    else if (e.clientY > bottom - threshold) speed = maxSpeed * ((e.clientY - (bottom - threshold)) / threshold);
+                    currentScrollSpeed.value = speed;
+                    if (speed !== 0) {
+                        if (!autoScrollInterval) autoScrollInterval = setInterval(() => {
+                            if (tableContainer.value) tableContainer.value.scrollTop += currentScrollSpeed.value;
+                        }, 16);
+                    } else {
+                        if (autoScrollInterval) { clearInterval(autoScrollInterval); autoScrollInterval = null; }
+                    }
+                };
+
+                const endDrag = () => {
+                    isDragging.value = false;
+                    currentScrollSpeed.value = 0;
+                    snapshotSelection.value = new Set();
+                    isCtrlDrag.value = false;
+                    if (autoScrollInterval) { clearInterval(autoScrollInterval); autoScrollInterval = null; }
+                };
+
+                const copyToClipboard = async (text, count, isSingle = false) => {
+                    if (!text) return;
+                    const msg = isSingle ? '網址已複製！' : `已複製 ${count} 個${targetLabel.value}連結！`;
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        showToastMsg(msg);
+                    } catch (err) {
+                        const ta = document.createElement('textarea');
+                        ta.value = text;
+                        document.body.appendChild(ta);
+                        ta.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(ta);
+                        showToastMsg(msg);
+                    }
+                };
+
+                const copyTableSelection = () => {
+                    const links = Array.from(tableSelection).sort((a, b) => a - b).map(i => {
+                        const link = getTargetLink(filteredSchools.value[i]);
+                        return link ? link.url : '';
+                    }).filter(u => u !== '');
+                    if (links.length === 0) return;
+                    copyToClipboard(links.join('\n'), links.length);
+                };
+
+                const copyAllLinks = () => {
+                    const links = filteredSchools.value.map(item => {
+                        const link = getTargetLink(item);
+                        return (link && !link.disabled) ? link.url : null;
+                    }).filter(u => u !== null);
+                    if (links.length === 0) { showToastMsg('沒有可複製的連結'); return; }
+                    copyToClipboard(links.join('\n'), links.length);
+                };
+
+                const handleKeydown = (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c') {
+                        if (viewMode.value === 'table' && tableSelection.size > 0) {
+                            e.preventDefault();
+                            copyTableSelection();
+                        }
+                    }
+                };
+
+                onMounted(() => {
+                    fetchData();
+                    window.addEventListener('mouseup', endDrag);
+                    window.addEventListener('mousemove', onGlobalMouseMove);
+                    window.addEventListener('keydown', handleKeydown);
+                });
+
+                onUnmounted(() => {
+                    window.removeEventListener('mouseup', endDrag);
+                    window.removeEventListener('mousemove', onGlobalMouseMove);
+                    window.removeEventListener('keydown', handleKeydown);
+                    if (autoScrollInterval) clearInterval(autoScrollInterval);
+                });
+
+                return {
+                    loading, useMockData, courseTypes, selectedType, filteredCourses,
+                    selectedCourse, searchKeyword, filteredSchools, viewMode, tableSelection,
+                    tableContainer, handleMouseDown, handleMouseEnter, endDrag,
+                    isRowSelected, getTargetLink, copyTableSelection, showToast, toastMessage,
+                    selectType, selectCourse, tableTarget, setTableTarget, targetLabel,
+                    copyAllLinks, handleRightClickCopy, generalLinks,
+                    roleFilter, setRoleFilter,
+                    allSelected, someSelected, toggleSelectAll
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>
