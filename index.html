@@ -552,9 +552,6 @@
             background: var(--bg2);
             border-bottom: 1px solid var(--border);
             padding: 11px 16px;
-            position: sticky;
-            top: 64px;
-            z-index: 10;
             display: flex;
             align-items: center;
             flex-wrap: wrap;
@@ -644,7 +641,7 @@
 
         .dtbl thead th {
             position: sticky;
-            top: 0;
+            top: 64px;
             z-index: 20;
             background: var(--bg2);
             font-family: 'IBM Plex Mono', monospace;
@@ -963,7 +960,7 @@
 
                     <!-- Data area -->
                     <div
-                        style="background:var(--bg2);border-radius:8px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(50,32,10,0.05);overflow:hidden;">
+                        style="background:var(--bg2);border-radius:8px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(50,32,10,0.05);overflow:clip;">
 
                         <div v-if="filteredSchools.length === 0"
                             style="min-height:360px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--t3);">
@@ -1072,7 +1069,7 @@
                                 </div>
                             </div>
 
-                            <div ref="tableContainer" class="cscroll">
+                            <div ref="tableContainer" class="cscroll" style="overflow:auto;max-height:70vh;">
                                 <table class="dtbl">
                                     <thead>
                                         <tr>
