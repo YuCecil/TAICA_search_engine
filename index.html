@@ -1165,11 +1165,11 @@
                 <div class="fcopy" @click="copyTableSelection">
                     <i class="fa-regular fa-copy" style="font-size:13px;"></i>
                     <span style="font-weight:700;font-size:13px;">複製 {{ tableSelection.size }} 個{{ targetLabel }}</span>
-                    <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;background:var(--cyan-dim);border:1px solid rgba(42,79,170,.28);padding:2px 9px;border-radius:20px;">ctrl+c</span>
                 </div>
                 <div class="fopen" @click="openTableSelection">
                     <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:13px;"></i>
                     <span style="font-weight:700;font-size:13px;">開啟 {{ tableSelection.size }} 個分頁</span>
+                    <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;background:var(--purple-dim);border:1px solid rgba(26,107,116,.28);padding:2px 9px;border-radius:20px;">ctrl+↵</span>
                 </div>
             </div>
         </transition>
@@ -1539,6 +1539,12 @@
                         if (viewMode.value === 'table' && tableSelection.size > 0) {
                             e.preventDefault();
                             copyTableSelection();
+                        }
+                    }
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                        if (viewMode.value === 'table' && tableSelection.size > 0) {
+                            e.preventDefault();
+                            openTableSelection();
                         }
                     }
                 };
