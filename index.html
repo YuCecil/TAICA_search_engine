@@ -3,7 +3,6 @@
 
 <head>
     <base target="_top">
-    <title>TAICA查詢系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <link
@@ -72,8 +71,7 @@
             box-shadow: 0 1px 6px rgba(50, 32, 10, 0.07);
             flex-shrink: 0;
             z-index: 50;
-            position: sticky;
-            top: 0;
+            position: relative;
         }
 
         /* Institutional top-stripe */
@@ -90,8 +88,8 @@
         .hdr-inner {
             max-width: 1300px;
             margin: 0 auto;
-            padding: 0 24px;
-            height: 64px;
+            padding: 0 20px;
+            height: 55px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -107,7 +105,7 @@
         .logo-taica {
             font-family: 'DM Serif Display', serif;
             font-style: italic;
-            font-size: 30px;
+            font-size: 25px;
             letter-spacing: 0.06em;
             color: #1a2f6e;
             line-height: 1;
@@ -122,7 +120,7 @@
         }
 
         .logo-cn {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 500;
             color: var(--t2);
             letter-spacing: 0.05em;
@@ -130,7 +128,7 @@
 
         .hdr-search-wrap {
             position: relative;
-            width: 300px;
+            width: 260px;
             flex-shrink: 0;
         }
 
@@ -151,8 +149,8 @@
             border-radius: 6px;
             color: var(--t1);
             font-family: 'Noto Sans TC', sans-serif;
-            font-size: 14px;
-            padding: 9px 14px 9px 34px;
+            font-size: 12px;
+            padding: 7px 12px 7px 30px;
             transition: border-color .18s, box-shadow .18s;
         }
 
@@ -168,24 +166,24 @@
 
         /* ── LAYOUT ── */
         .main-wrap {
+            flex: 1;
+            overflow: hidden;
             max-width: 1300px;
             margin: 0 auto;
             width: 100%;
             display: flex;
-            gap: 14px;
-            padding: 16px 20px;
-            align-items: flex-start;
+            gap: 10px;
+            padding: 12px 16px;
         }
 
         .sidebar {
-            width: 256px;
+            width: 216px;
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            position: sticky;
-            top: 64px;
-            height: calc(100vh - 64px);
+            gap: 8px;
+            height: 100%;
+            overflow: hidden;
         }
 
         .content-col {
@@ -193,8 +191,9 @@
             min-width: 0;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            padding-bottom: 40px;
+            gap: 8px;
+            height: 100%;
+            overflow: hidden;
         }
 
         /* ── PANEL ── */
@@ -208,7 +207,7 @@
         /* ── SECTION LABEL ── */
         .s-label {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 600;
             letter-spacing: .13em;
             text-transform: uppercase;
@@ -217,9 +216,9 @@
 
         /* ── TYPE FILTER ── */
         .type-pill {
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 500;
-            padding: 5px 12px;
+            padding: 3px 9px;
             border-radius: 4px;
             border: 1px solid var(--border);
             background: transparent;
@@ -248,7 +247,7 @@
             display: block;
             width: 100%;
             text-align: left;
-            padding: 11px 16px;
+            padding: 8px 13px;
             border-bottom: 1px solid var(--border);
             border-left: 2px solid transparent;
             background: transparent;
@@ -273,7 +272,7 @@
         }
 
         .ci-name {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 500;
             color: var(--t1);
             line-height: 1.35;
@@ -284,7 +283,7 @@
         }
 
         .ci-type {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--t3);
             margin-top: 2px;
             font-family: 'IBM Plex Mono', monospace;
@@ -295,10 +294,10 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 7px 10px;
+            padding: 5px 8px;
             border-radius: 5px;
             text-decoration: none;
-            font-size: 13px;
+            font-size: 11px;
             color: var(--t2);
             transition: background .12s, color .12s, transform .18s cubic-bezier(.34, 1.4, .64, 1);
             cursor: context-menu;
@@ -328,7 +327,7 @@
             border: 1px solid var(--border);
             border-left: 3px solid var(--amber);
             border-radius: 8px;
-            padding: 18px 20px;
+            padding: 14px 16px;
             flex-shrink: 0;
             box-shadow: 0 1px 4px rgba(50, 32, 10, 0.05);
         }
@@ -336,28 +335,28 @@
         .course-tag {
             display: inline-block;
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 11px;
+            font-size: 10px;
             letter-spacing: .06em;
             color: var(--amber);
             background: var(--amber-dim);
             border: 1px solid rgba(194, 65, 40, .20);
             border-radius: 3px;
-            padding: 3px 9px;
-            margin-bottom: 8px;
+            padding: 2px 7px;
+            margin-bottom: 6px;
         }
 
         .course-name-text {
-            font-size: 24px;
+            font-size: 19px;
             font-weight: 700;
             color: var(--t1);
             line-height: 1.3;
-            margin-bottom: 14px;
+            margin-bottom: 11px;
         }
 
         .glink-card {
             display: flex;
             align-items: center;
-            padding: 12px 16px;
+            padding: 9px 13px;
             background: var(--bg3);
             border: 1px solid rgba(194, 65, 40, .18);
             border-radius: 6px;
@@ -375,15 +374,15 @@
         }
 
         .glink-icon {
-            width: 32px;
-            height: 32px;
+            width: 26px;
+            height: 26px;
             border-radius: 5px;
             background: var(--amber-dim);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
-            margin-right: 12px;
+            font-size: 11px;
+            margin-right: 10px;
             flex-shrink: 0;
             transition: background .16s;
         }
@@ -404,9 +403,9 @@
         }
 
         .vbtn {
-            padding: 7px 15px;
+            padding: 5px 12px;
             border-radius: 4px;
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 500;
             cursor: pointer;
             color: var(--t2);
@@ -441,10 +440,10 @@
             align-items: center;
             gap: 3px;
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 600;
             letter-spacing: .04em;
-            padding: 3px 8px;
+            padding: 2px 6px;
             border-radius: 3px;
         }
 
@@ -471,7 +470,7 @@
             background: var(--bg2);
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 15px;
+            padding: 11px;
             box-shadow: 0 1px 4px rgba(50, 32, 10, 0.05);
             transition: border-color .22s, transform .22s cubic-bezier(.34, 1.3, .64, 1), box-shadow .22s;
         }
@@ -500,8 +499,8 @@
             justify-content: space-between;
             align-items: center;
             gap: 6px;
-            padding-bottom: 10px;
-            margin-bottom: 10px;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
             border-bottom: 1px solid var(--border);
         }
 
@@ -509,9 +508,9 @@
         .li {
             display: flex;
             align-items: center;
-            padding: 7px 10px;
+            padding: 5px 8px;
             border-radius: 5px;
-            font-size: 13px;
+            font-size: 11px;
             text-decoration: none;
             transition: background .12s, color .12s, box-shadow .12s, transform .16s;
         }
@@ -534,11 +533,11 @@
         }
 
         .li-ic {
-            width: 18px;
+            width: 15px;
             text-align: center;
             flex-shrink: 0;
-            font-size: 12px;
-            margin-right: 9px;
+            font-size: 10px;
+            margin-right: 7px;
         }
 
         .li-chev {
@@ -551,7 +550,7 @@
         .tbl-ctrl {
             background: var(--bg2);
             border-bottom: 1px solid var(--border);
-            padding: 11px 16px;
+            padding: 8px 13px;
             display: flex;
             align-items: center;
             flex-wrap: wrap;
@@ -569,9 +568,9 @@
         }
 
         .tgt-btn {
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 500;
-            padding: 6px 13px;
+            padding: 4px 11px;
             border-radius: 4px;
             cursor: pointer;
             color: var(--t2);
@@ -617,9 +616,9 @@
             background: var(--purple-dim);
             color: var(--purple);
             border: 1px solid rgba(26, 107, 116, .28);
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 600;
-            padding: 7px 16px;
+            padding: 5px 13px;
             border-radius: 6px;
             font-family: 'Noto Sans TC', sans-serif;
             cursor: pointer;
@@ -645,12 +644,12 @@
             z-index: 20;
             background: var(--bg2);
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 700;
             letter-spacing: .12em;
             text-transform: uppercase;
             color: var(--t3);
-            padding: 12px 14px;
+            padding: 9px 11px;
             border-bottom: 1px solid var(--border);
         }
 
@@ -677,11 +676,11 @@
         }
 
         .dtbl tbody tr {
-            height: 46px;
+            height: 36px;
         }
 
         .dtbl tbody td {
-            padding: 10px 14px;
+            padding: 8px 11px;
             vertical-align: middle;
         }
 
@@ -711,29 +710,50 @@
             border-color: var(--cyan);
         }
 
-        /* ── FLOAT COPY ── */
-        .fcopy {
+        /* ── FLOAT COPY / OPEN ── */
+        .fcopy-group {
             position: fixed;
             bottom: 22px;
             left: 50%;
             transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 50;
+        }
+
+        .fcopy,
+        .fopen {
             background: var(--bg2);
-            border: 1px solid rgba(42, 79, 170, .35);
-            box-shadow: 0 8px 32px rgba(42, 79, 170, .16), 0 4px 16px rgba(50, 32, 10, .10);
-            color: var(--cyan);
             padding: 10px 22px;
             border-radius: 100px;
             display: flex;
             align-items: center;
             gap: 12px;
-            z-index: 50;
             cursor: pointer;
             transition: transform .18s, box-shadow .18s;
+            white-space: nowrap;
+        }
+
+        .fcopy {
+            border: 1px solid rgba(42, 79, 170, .35);
+            box-shadow: 0 8px 32px rgba(42, 79, 170, .16), 0 4px 16px rgba(50, 32, 10, .10);
+            color: var(--cyan);
+        }
+
+        .fopen {
+            border: 1px solid rgba(26, 107, 116, .35);
+            box-shadow: 0 8px 32px rgba(26, 107, 116, .16), 0 4px 16px rgba(50, 32, 10, .10);
+            color: var(--purple);
         }
 
         .fcopy:hover {
-            transform: translateX(-50%) scale(1.04) translateY(-2px);
+            transform: scale(1.04) translateY(-2px);
             box-shadow: 0 16px 48px rgba(42, 79, 170, .28), 0 4px 16px rgba(50, 32, 10, .12), 0 0 0 4px rgba(42, 79, 170, .08);
+        }
+
+        .fopen:hover {
+            transform: scale(1.04) translateY(-2px);
+            box-shadow: 0 16px 48px rgba(26, 107, 116, .28), 0 4px 16px rgba(50, 32, 10, .12), 0 0 0 4px rgba(26, 107, 116, .08);
         }
 
         /* ── TOAST ── */
@@ -745,12 +765,12 @@
             background: var(--bg2);
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 12px 22px;
+            padding: 10px 18px;
             box-shadow: 0 8px 32px rgba(50, 32, 10, .12);
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 500;
             color: var(--t1);
         }
@@ -807,7 +827,7 @@
 
         /* ── EMPTY / DASHED ── */
         .empty-pane {
-            min-height: 360px;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -820,8 +840,8 @@
     </style>
 </head>
 
-<body class="flex flex-col no-select">
-    <div id="app" class="flex flex-col min-h-screen">
+<body class="h-screen overflow-hidden flex flex-col no-select">
+    <div id="app" class="h-full flex flex-col">
 
         <!-- ── HEADER ── -->
         <header class="hdr">
@@ -854,9 +874,9 @@
             <aside class="sidebar">
 
                 <!-- Type filter -->
-                <div class="panel" style="padding:14px;flex-shrink:0;">
-                    <span class="s-label" style="margin-bottom:9px;display:block;">課程類型</span>
-                    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <div class="panel" style="padding:11px;flex-shrink:0;">
+                    <span class="s-label" style="margin-bottom:7px;display:block;">課程類型</span>
+                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
                         <button v-for="type in courseTypes" @click="selectType(type)"
                             :class="['type-pill', selectedType === type ? 'on' : '']">
                             {{ type }}
@@ -866,12 +886,12 @@
 
                 <!-- Course list -->
                 <div class="panel" style="flex:1;overflow:hidden;display:flex;flex-direction:column;">
-                    <div style="padding:11px 16px 9px;border-bottom:1px solid var(--border);flex-shrink:0;">
+                    <div style="padding:9px 13px 7px;border-bottom:1px solid var(--border);flex-shrink:0;">
                         <span class="s-label">選擇課程</span>
                     </div>
                     <div class="cscroll" style="overflow-y:auto;flex:1;">
                         <div v-if="filteredCourses.length === 0"
-                            style="padding:20px;text-align:center;font-size:12px;color:var(--t3);font-family:'IBM Plex Mono',monospace;">
+                            style="padding:18px;text-align:center;font-size:11px;color:var(--t3);font-family:'IBM Plex Mono',monospace;">
                             // empty
                         </div>
                         <button v-for="course in filteredCourses" @click="selectCourse(course)"
@@ -885,7 +905,7 @@
                 <!-- General links -->
                 <div class="panel"
                     style="flex-shrink:0;overflow:hidden;display:flex;flex-direction:column;max-height:32vh;">
-                    <div style="padding:11px 14px 8px;border-bottom:1px solid var(--border);flex-shrink:0;">
+                    <div style="padding:8px 11px 6px;border-bottom:1px solid var(--border);flex-shrink:0;">
                         <span class="s-label">常用資源</span>
                     </div>
                     <div class="cscroll" style="overflow-y:auto;flex:1;padding:5px 8px 7px;">
@@ -908,31 +928,31 @@
             <section class="content-col">
 
                 <div v-if="!selectedCourse" class="empty-pane">
-                    <i class="fa-regular fa-hand-point-left" style="font-size:32px;"></i>
-                    <p style="font-size:14px;color:var(--t2);">請從左側選擇課程</p>
+                    <i class="fa-regular fa-hand-point-left" style="font-size:26px;"></i>
+                    <p style="font-size:12px;color:var(--t2);">請從左側選擇課程</p>
                 </div>
 
-                <div v-else style="display:flex;flex-direction:column;height:100%;gap:10px;">
+                <div v-else style="display:flex;flex-direction:column;height:100%;gap:8px;">
 
                     <!-- Course header -->
                     <div class="course-hdr">
                         <div class="course-tag">{{ selectedCourse.type }}</div>
                         <h2 class="course-name-text">{{ selectedCourse.name }}</h2>
-                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:9px;">
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:7px;">
                             <a v-for="link in selectedCourse.globalLinks" :href="link.url" target="_blank"
                                 @contextmenu.prevent="handleRightClickCopy(link.url)" class="glink-card"
                                 title="左鍵開啟，右鍵複製">
-                                <div class="glink-icon"><i class="fa-solid fa-star" style="font-size:13px;"></i></div>
+                                <div class="glink-icon"><i class="fa-solid fa-star" style="font-size:11px;"></i></div>
                                 <div style="flex:1;min-width:0;">
                                     <div
-                                        style="font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                                        style="font-weight:700;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                                         {{ link.name }}</div>
                                     <div
-                                        style="font-size:11px;opacity:.5;margin-top:2px;font-family:'IBM Plex Mono',monospace;">
+                                        style="font-size:9px;opacity:.5;margin-top:1px;font-family:'IBM Plex Mono',monospace;">
                                         右鍵複製連結</div>
                                 </div>
                                 <i class="fa-solid fa-external-link-alt"
-                                    style="font-size:11px;opacity:.35;margin-left:8px;flex-shrink:0;"></i>
+                                    style="font-size:9px;opacity:.35;margin-left:8px;flex-shrink:0;"></i>
                             </a>
                         </div>
                     </div>
@@ -941,43 +961,43 @@
                     <div
                         style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0;">
                         <div style="display:flex;align-items:center;gap:8px;">
-                            <span style="font-size:13px;font-weight:700;color:var(--t2);">各校連結</span>
-                            <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--t3);">({{
+                            <span style="font-size:11px;font-weight:700;color:var(--t2);">各校連結</span>
+                            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--t3);">({{
                                 filteredSchools.length }})</span>
-                            <span v-if="searchKeyword" style="font-size:12px;color:var(--red);">
-                                <i class="fa-solid fa-filter" style="font-size:11px;"></i> "{{ searchKeyword }}"
+                            <span v-if="searchKeyword" style="font-size:10px;color:var(--red);">
+                                <i class="fa-solid fa-filter" style="font-size:9px;"></i> "{{ searchKeyword }}"
                             </span>
                         </div>
                         <div v-if="filteredSchools.length > 0" class="view-sw">
                             <button @click="viewMode = 'card'" :class="['vbtn', viewMode==='card' ? 'vcard' : '']">
-                                <i class="fa-solid fa-grid-2" style="font-size:12px;"></i>卡片
+                                <i class="fa-solid fa-grid-2" style="font-size:10px;"></i>卡片
                             </button>
                             <button @click="viewMode = 'table'" :class="['vbtn', viewMode==='table' ? 'vtable' : '']">
-                                <i class="fa-solid fa-table-list" style="font-size:12px;"></i>批量複製
+                                <i class="fa-solid fa-table-list" style="font-size:10px;"></i>批量複製
                             </button>
                         </div>
                     </div>
 
                     <!-- Data area -->
                     <div
-                        style="background:var(--bg2);border-radius:8px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(50,32,10,0.05);overflow:clip;">
+                        style="flex:1;overflow:hidden;min-height:0;background:var(--bg2);border-radius:8px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(50,32,10,0.05);">
 
                         <div v-if="filteredSchools.length === 0"
-                            style="min-height:360px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--t3);">
-                            <i class="fa-solid fa-inbox" style="font-size:28px;"></i>
-                            <p style="font-family:'IBM Plex Mono',monospace;font-size:13px;">// no results</p>
+                            style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--t3);">
+                            <i class="fa-solid fa-inbox" style="font-size:22px;"></i>
+                            <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;">// no results</p>
                         </div>
 
                         <!-- Card view -->
-                        <div v-else-if="viewMode === 'card'" class="cscroll"
-                            style="padding:12px;">
+                        <div v-else-if="viewMode === 'card'" class="cscroll h-full"
+                            style="overflow-y:auto;padding:12px;">
                             <div
-                                style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">
+                                style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px;">
                                 <div v-for="item in filteredSchools" :key="item.school"
                                     :class="['scard', item.isHost ? 'is-host' : '']">
                                     <div class="scard-div">
                                         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-                                            <span style="font-size:14px;font-weight:700;color:var(--t1);">{{ item.school
+                                            <span style="font-size:12px;font-weight:700;color:var(--t1);">{{ item.school
                                                 }}</span>
                                             <span v-if="item.isHost" class="bdg bdg-host">
                                                 <i class="fa-solid fa-crown" style="font-size:8px;"></i>開課
@@ -1011,7 +1031,7 @@
                         </div>
 
                         <!-- Table view -->
-                        <div v-else>
+                        <div v-else style="height:100%;display:flex;flex-direction:column;">
                             <div class="tbl-ctrl">
                                 <div style="display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap;">
                                     <span
@@ -1069,7 +1089,7 @@
                                 </div>
                             </div>
 
-                            <div ref="tableContainer" class="cscroll" style="overflow:auto;max-height:70vh;">
+                            <div ref="tableContainer" class="cscroll" style="flex:1;overflow:auto;">
                                 <table class="dtbl">
                                     <thead>
                                         <tr>
@@ -1139,13 +1159,18 @@
 
         </div><!-- /main-wrap -->
 
-        <!-- Float copy -->
+        <!-- Float copy / open -->
         <transition name="toast">
-            <div v-if="viewMode==='table' && tableSelection.size > 0" class="fcopy" @click="copyTableSelection">
-                <i class="fa-regular fa-copy" style="font-size:13px;"></i>
-                <span style="font-weight:700;font-size:13px;">複製 {{ tableSelection.size }} 個{{ targetLabel }}</span>
-                <span
-                    style="font-family:'IBM Plex Mono',monospace;font-size:10px;background:var(--cyan-dim);border:1px solid rgba(42,79,170,.28);padding:2px 9px;border-radius:20px;">ctrl+c</span>
+            <div v-if="viewMode==='table' && tableSelection.size > 0" class="fcopy-group">
+                <div class="fcopy" @click="copyTableSelection">
+                    <i class="fa-regular fa-copy" style="font-size:13px;"></i>
+                    <span style="font-weight:700;font-size:13px;">複製 {{ tableSelection.size }} 個{{ targetLabel }}</span>
+                    <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;background:var(--cyan-dim);border:1px solid rgba(42,79,170,.28);padding:2px 9px;border-radius:20px;">ctrl+c</span>
+                </div>
+                <div class="fopen" @click="openTableSelection">
+                    <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:13px;"></i>
+                    <span style="font-weight:700;font-size:13px;">開啟 {{ tableSelection.size }} 個分頁</span>
+                </div>
             </div>
         </transition>
 
@@ -1490,6 +1515,16 @@
                     copyToClipboard(links.join('\n'), links.length);
                 };
 
+                const openTableSelection = () => {
+                    const links = Array.from(tableSelection).sort((a, b) => a - b).map(i => {
+                        const link = getTargetLink(filteredSchools.value[i]);
+                        return (link && !link.disabled) ? link.url : null;
+                    }).filter(u => u !== null);
+                    if (links.length === 0) { showToastMsg('沒有可開啟的連結'); return; }
+                    links.forEach((url, idx) => setTimeout(() => window.open(url, '_blank'), idx * 300));
+                    showToastMsg(`已開啟 ${links.length} 個分頁`);
+                };
+
                 const copyAllLinks = () => {
                     const links = filteredSchools.value.map(item => {
                         const link = getTargetLink(item);
@@ -1526,7 +1561,7 @@
                     loading, useMockData, courseTypes, selectedType, filteredCourses,
                     selectedCourse, searchKeyword, filteredSchools, viewMode, tableSelection,
                     tableContainer, handleMouseDown, handleMouseEnter, endDrag,
-                    isRowSelected, getTargetLink, copyTableSelection, showToast, toastMessage,
+                    isRowSelected, getTargetLink, copyTableSelection, openTableSelection, showToast, toastMessage,
                     selectType, selectCourse, tableTarget, setTableTarget, targetLabel,
                     copyAllLinks, handleRightClickCopy, generalLinks,
                     roleFilter, setRoleFilter,
