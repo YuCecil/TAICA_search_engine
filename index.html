@@ -1117,6 +1117,7 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="(item, index) in filteredSchools" :key="item.school"
+                                            :data-idx="index"
                                             @mousedown="handleMouseDown(index, $event, item)"
                                             @mouseenter="handleMouseEnter(index, item)"
                                             :class="[isRowSelected(index)?'tr-on':'', getTargetLink(item)?.disabled?'tr-off':'']">
@@ -1467,8 +1468,11 @@
                     }
                 };
 
+                let lastMouseX = 0, lastMouseY = 0;
                 const onGlobalMouseMove = (e) => {
                     if (!isDragging.value || !tableContainer.value) return;
+                    lastMouseX = e.clientX;
+                    lastMouseY = e.clientY;
                     const { top, bottom } = tableContainer.value.getBoundingClientRect();
                     const threshold = 50, maxSpeed = 30;
                     let speed = 0;
@@ -1477,7 +1481,15 @@
                     currentScrollSpeed.value = speed;
                     if (speed !== 0) {
                         if (!autoScrollInterval) autoScrollInterval = setInterval(() => {
-                            if (tableContainer.value) tableContainer.value.scrollTop += currentScrollSpeed.value;
+                            if (!tableContainer.value) return;
+                            tableContainer.value.scrollTop += currentScrollSpeed.value;
+                            const el = document.elementFromPoint(lastMouseX, lastMouseY);
+                            const tr = el?.closest('tr[data-idx]');
+                            if (tr) {
+                                const idx = parseInt(tr.dataset.idx);
+                                const item = filteredSchools.value[idx];
+                                if (item !== undefined) handleMouseEnter(idx, item);
+                            }
                         }, 16);
                     } else {
                         if (autoScrollInterval) { clearInterval(autoScrollInterval); autoScrollInterval = null; }
