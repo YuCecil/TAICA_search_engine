@@ -1057,6 +1057,27 @@
                                             <i class="fa-solid fa-table" style="font-size:9px;"></i>分頁
                                         </button>
                                     </div>
+                                    <template v-if="tableTarget === 'cool'">
+                                        <div style="width:1px;height:18px;background:var(--border2);flex-shrink:0;"></div>
+                                        <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.1em;">PAGE</span>
+                                        <div class="tgt-grp">
+                                            <button @click="coolSuffix = ''" :class="['tgt-btn', coolSuffix===''?'tc':'']">
+                                                <i class="fa-solid fa-house" style="font-size:9px;"></i>首頁
+                                            </button>
+                                            <div style="width:1px;background:var(--border);margin:2px 0;"></div>
+                                            <button @click="coolSuffix = '/users'" :class="['tgt-btn', coolSuffix==='/users'?'tc':'']">
+                                                <i class="fa-solid fa-users" style="font-size:9px;"></i>成員
+                                            </button>
+                                            <div style="width:1px;background:var(--border);margin:2px 0;"></div>
+                                            <button @click="coolSuffix = '/assignments'" :class="['tgt-btn', coolSuffix==='/assignments'?'tc':'']">
+                                                <i class="fa-solid fa-clipboard-list" style="font-size:9px;"></i>作業
+                                            </button>
+                                            <div style="width:1px;background:var(--border);margin:2px 0;"></div>
+                                            <button @click="coolSuffix = '/settings'" :class="['tgt-btn', coolSuffix==='/settings'?'tc':'']">
+                                                <i class="fa-solid fa-gear" style="font-size:9px;"></i>設定
+                                            </button>
+                                        </div>
+                                    </template>
                                     <template v-if="selectedCourse?.type === '混合課程'">
                                         <div style="width:1px;height:18px;background:var(--border2);flex-shrink:0;">
                                         </div>
@@ -1140,10 +1161,10 @@
                                                         style="font-family:'IBM Plex Mono',monospace;font-size:10px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:400px;"
                                                         :style="isRowSelected(index)?'color:var(--cyan)':'color:var(--t3)'">
                                                         {{ getTargetLink(item).disabled ? '— 無有效連結 —' :
-                                                        getTargetLink(item).url }}
+                                                        getTargetLink(item).url + (tableTarget === 'cool' ? coolSuffix : '') }}
                                                     </span>
                                                     <a v-if="!getTargetLink(item).disabled"
-                                                        :href="getTargetLink(item).url" target="_blank" class="row-open"
+                                                        :href="getTargetLink(item).url + (tableTarget === 'cool' ? coolSuffix : '')" target="_blank" class="row-open"
                                                         title="在新分頁開啟" @mousedown.stop>
                                                         <i class="fa-solid fa-external-link-alt"></i>
                                                     </a>
@@ -1245,6 +1266,7 @@
                 const currentScrollSpeed = ref(0);
                 const tableTarget = ref('cool');
                 const roleFilter = ref('全部');
+                const coolSuffix = ref('');
 
                 let autoScrollInterval = null;
                 const showToast = ref(false);
@@ -1355,6 +1377,12 @@
 
                 const getTargetLink = (item) => item.links.find(l => l.type === tableTarget.value);
 
+                const getEffectiveUrl = (item) => {
+                    const link = getTargetLink(item);
+                    if (!link || link.disabled) return null;
+                    return link.url + (tableTarget.value === 'cool' ? coolSuffix.value : '');
+                };
+
                 const targetLabel = computed(() => {
                     if (tableTarget.value === 'cool') return 'COOL';
                     if (tableTarget.value === 'folder') return '資料夾';
@@ -1376,11 +1404,13 @@
                     tableSelection.clear();
                     tableTarget.value = course.type === '鏡像課程' ? 'folder' : 'cool';
                     roleFilter.value = '全部';
+                    coolSuffix.value = '';
                 };
 
                 const setTableTarget = (target) => {
                     tableTarget.value = target;
                     tableSelection.clear();
+                    coolSuffix.value = '';
                 };
 
                 const setRoleFilter = (role) => {
@@ -1522,29 +1552,24 @@
                 };
 
                 const copyTableSelection = () => {
-                    const links = Array.from(tableSelection).sort((a, b) => a - b).map(i => {
-                        const link = getTargetLink(filteredSchools.value[i]);
-                        return link ? link.url : '';
-                    }).filter(u => u !== '');
+                    const links = Array.from(tableSelection).sort((a, b) => a - b)
+                        .map(i => getEffectiveUrl(filteredSchools.value[i]))
+                        .filter(u => u !== null);
                     if (links.length === 0) return;
                     copyToClipboard(links.join('\n'), links.length);
                 };
 
                 const openTableSelection = () => {
-                    const links = Array.from(tableSelection).sort((a, b) => a - b).map(i => {
-                        const link = getTargetLink(filteredSchools.value[i]);
-                        return (link && !link.disabled) ? link.url : null;
-                    }).filter(u => u !== null);
+                    const links = Array.from(tableSelection).sort((a, b) => a - b)
+                        .map(i => getEffectiveUrl(filteredSchools.value[i]))
+                        .filter(u => u !== null);
                     if (links.length === 0) { showToastMsg('沒有可開啟的連結'); return; }
                     links.forEach((url, idx) => setTimeout(() => window.open(url, '_blank'), idx * 300));
                     showToastMsg(`已開啟 ${links.length} 個分頁`);
                 };
 
                 const copyAllLinks = () => {
-                    const links = filteredSchools.value.map(item => {
-                        const link = getTargetLink(item);
-                        return (link && !link.disabled) ? link.url : null;
-                    }).filter(u => u !== null);
+                    const links = filteredSchools.value.map(item => getEffectiveUrl(item)).filter(u => u !== null);
                     if (links.length === 0) { showToastMsg('沒有可複製的連結'); return; }
                     copyToClipboard(links.join('\n'), links.length);
                 };
@@ -1585,7 +1610,7 @@
                     isRowSelected, getTargetLink, copyTableSelection, openTableSelection, showToast, toastMessage,
                     selectType, selectCourse, tableTarget, setTableTarget, targetLabel,
                     copyAllLinks, handleRightClickCopy, generalLinks,
-                    roleFilter, setRoleFilter,
+                    roleFilter, setRoleFilter, coolSuffix,
                     allSelected, someSelected, toggleSelectAll
                 };
             }
