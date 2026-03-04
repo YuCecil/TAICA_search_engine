@@ -1141,6 +1141,7 @@
                                             :data-idx="index"
                                             @mousedown="handleMouseDown(index, $event, item)"
                                             @mouseenter="handleMouseEnter(index, item)"
+                                            @dblclick.stop="openSingleRow(item)"
                                             :class="[isRowSelected(index)?'tr-on':'', getTargetLink(item)?.disabled?'tr-off':'']">
                                             <td
                                                 style="text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--t3);">
@@ -1559,6 +1560,11 @@
                     copyToClipboard(links.join('\n'), links.length);
                 };
 
+                const openSingleRow = (item) => {
+                    const url = getEffectiveUrl(item);
+                    if (url) window.open(url, '_blank');
+                };
+
                 const openTableSelection = () => {
                     const links = Array.from(tableSelection).sort((a, b) => a - b)
                         .map(i => getEffectiveUrl(filteredSchools.value[i]))
@@ -1609,7 +1615,7 @@
                     tableContainer, handleMouseDown, handleMouseEnter, endDrag,
                     isRowSelected, getTargetLink, copyTableSelection, openTableSelection, showToast, toastMessage,
                     selectType, selectCourse, tableTarget, setTableTarget, targetLabel,
-                    copyAllLinks, handleRightClickCopy, generalLinks,
+                    copyAllLinks, openSingleRow, handleRightClickCopy, generalLinks,
                     roleFilter, setRoleFilter, coolSuffix,
                     allSelected, someSelected, toggleSelectAll
                 };
