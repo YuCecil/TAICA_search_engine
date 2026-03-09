@@ -994,19 +994,14 @@
                         <!-- Card view -->
                         <div v-else-if="viewMode === 'card'"
                             style="padding:12px;">
-                            <!-- twoStep info banner -->
-                            <div v-if="selectedCourse?.twoStep" style="margin-bottom:10px;padding:9px 14px;background:var(--cyan-dim);border:1px solid rgba(42,79,170,.18);border-radius:6px;font-size:11px;color:var(--cyan);display:flex;align-items:center;gap:7px;">
-                                <i class="fa-solid fa-circle-info" style="flex-shrink:0;"></i>
-                                <span><strong>雙階段加課：</strong>每所學校均需以「旁聽生」加入<strong>主導課程</strong>，並以「學生」加入各自的<strong>課程頁面</strong></span>
-                            </div>
                             <div
                                 style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px;">
                                 <template v-for="(item, idx) in filteredSchools" :key="item.school">
-                                    <!-- Group divider for twoStep -->
+                                    <!-- Group header for twoStep -->
                                     <div v-if="selectedCourse?.twoStep && (idx === 0 || item.role !== filteredSchools[idx-1].role)"
-                                        :style="'grid-column:1/-1;display:flex;align-items:center;gap:8px;padding:3px 2px;' + (idx > 0 ? 'margin-top:4px;padding-top:10px;border-top:1px solid var(--border2);' : '')">
-                                        <span style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;font-weight:700;" :style="item.role==='清大組'?'color:var(--purple)':'color:var(--green)'">{{ item.role }}</span>
-                                        <span style="font-size:10px;color:var(--t3);">{{ item.role === '清大組' ? '→ 以學生身份加入清大課程頁面' : '→ 以學生身份加入本校衛星課程頁面' }}</span>
+                                        :style="'grid-column:1/-1;border-radius:7px;padding:9px 14px;display:flex;align-items:center;gap:10px;' + (idx > 0 ? 'margin-top:6px;' : '') + (item.role==='清大組' ? 'background:var(--purple-dim);border:1px solid rgba(26,107,116,.22);' : 'background:var(--green-dim);border:1px solid rgba(79,118,32,.22);')">
+                                        <span style="font-size:13px;font-weight:700;white-space:nowrap;" :style="item.role==='清大組'?'color:var(--purple)':'color:var(--green)'">{{ item.role }}</span>
+                                        <span style="font-size:11px;color:var(--t2);">{{ item.role === '清大組' ? '學生加入清大課程頁面，旁聽生加入主導課程' : '學生加入本校衛星課程頁面，旁聽生加入主導課程' }}</span>
                                     </div>
                                     <div :class="['scard', item.isHost ? 'is-host' : '']">
                                         <div class="scard-div">
@@ -1019,7 +1014,8 @@
                                             <span :class="['bdg', (item.role==='鏡像'||item.role==='清大組') ? 'bdg-mirror' : 'bdg-sat']">{{ item.role }}</span>
                                         </div>
                                         <div style="display:flex;flex-direction:column;gap:2px;">
-                                            <a v-for="link in item.links" :href="link.disabled ? null : link.url"
+                                            <a v-for="link in item.links.filter(l => l.type !== 'cool_main')"
+                                                :href="link.disabled ? null : link.url"
                                                 :class="['li', link.disabled ? 'ld' : 'la']"
                                                 :target="link.disabled ? null : '_blank'"
                                                 @click="link.disabled && $event.preventDefault()"
@@ -1031,8 +1027,6 @@
                                                     :style="link.disabled?'color:var(--t3)':'color:var(--green)'"></i>
                                                 <i v-else-if="link.type==='cool'" class="fa-solid fa-graduation-cap li-ic"
                                                     :style="link.disabled?'color:var(--t3)':'color:var(--cyan)'"></i>
-                                                <i v-else-if="link.type==='cool_main'" class="fa-solid fa-graduation-cap li-ic"
-                                                    :style="link.disabled?'color:var(--t3)':'color:var(--amber)'"></i>
                                                 <i v-else-if="link.type==='cool_student'" class="fa-solid fa-graduation-cap li-ic"
                                                     :style="link.disabled?'color:var(--t3)':'color:var(--cyan)'"></i>
                                                 <i v-else class="fa-solid fa-link li-ic" style="color:var(--t3);"></i>
@@ -1055,11 +1049,6 @@
                                         style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;color:var(--purple);letter-spacing:.1em;">TARGET</span>
                                     <div class="tgt-grp">
                                         <template v-if="selectedCourse?.twoStep">
-                                            <button @click="setTableTarget('cool_main')"
-                                                :class="['tgt-btn', tableTarget==='cool_main'?'tf':'']">
-                                                <i class="fa-solid fa-graduation-cap" style="font-size:9px;"></i>主導課程
-                                            </button>
-                                            <div style="width:1px;background:var(--border);margin:2px 0;"></div>
                                             <button @click="setTableTarget('cool_student')"
                                                 :class="['tgt-btn', tableTarget==='cool_student'?'tc':'']">
                                                 <i class="fa-solid fa-graduation-cap" style="font-size:9px;"></i>課程頁面
@@ -1449,7 +1438,7 @@
                     selectedCourse.value = course;
                     viewMode.value = 'card';
                     tableSelection.clear();
-                    tableTarget.value = course.twoStep ? 'cool_main' : course.type === '鏡像課程' ? 'folder' : 'cool';
+                    tableTarget.value = course.twoStep ? 'cool_student' : course.type === '鏡像課程' ? 'folder' : 'cool';
                     roleFilter.value = '全部';
                     coolSuffix.value = '';
                 };
