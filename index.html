@@ -994,42 +994,56 @@
                         <!-- Card view -->
                         <div v-else-if="viewMode === 'card'"
                             style="padding:12px;">
+                            <!-- twoStep info banner -->
+                            <div v-if="selectedCourse?.twoStep" style="margin-bottom:10px;padding:9px 14px;background:var(--cyan-dim);border:1px solid rgba(42,79,170,.18);border-radius:6px;font-size:11px;color:var(--cyan);display:flex;align-items:center;gap:7px;">
+                                <i class="fa-solid fa-circle-info" style="flex-shrink:0;"></i>
+                                <span><strong>雙階段加課：</strong>每所學校均需以「旁聽生」加入<strong>主導課程</strong>，並以「學生」加入各自的<strong>課程頁面</strong></span>
+                            </div>
                             <div
                                 style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px;">
-                                <div v-for="item in filteredSchools" :key="item.school"
-                                    :class="['scard', item.isHost ? 'is-host' : '']">
-                                    <div class="scard-div">
-                                        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-                                            <span style="font-size:12px;font-weight:700;color:var(--t1);">{{ item.school
-                                                }}</span>
-                                            <span v-if="item.isHost" class="bdg bdg-host">
-                                                <i class="fa-solid fa-crown" style="font-size:8px;"></i>開課
-                                            </span>
+                                <template v-for="(item, idx) in filteredSchools" :key="item.school">
+                                    <!-- Group divider for twoStep -->
+                                    <div v-if="selectedCourse?.twoStep && (idx === 0 || item.role !== filteredSchools[idx-1].role)"
+                                        :style="'grid-column:1/-1;display:flex;align-items:center;gap:8px;padding:3px 2px;' + (idx > 0 ? 'margin-top:4px;padding-top:10px;border-top:1px solid var(--border2);' : '')">
+                                        <span style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;font-weight:700;" :style="item.role==='清大組'?'color:var(--purple)':'color:var(--green)'">{{ item.role }}</span>
+                                        <span style="font-size:10px;color:var(--t3);">{{ item.role === '清大組' ? '→ 以學生身份加入清大課程頁面' : '→ 以學生身份加入本校衛星課程頁面' }}</span>
+                                    </div>
+                                    <div :class="['scard', item.isHost ? 'is-host' : '']">
+                                        <div class="scard-div">
+                                            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                                                <span style="font-size:12px;font-weight:700;color:var(--t1);">{{ item.school }}</span>
+                                                <span v-if="item.isHost" class="bdg bdg-host">
+                                                    <i class="fa-solid fa-crown" style="font-size:8px;"></i>開課
+                                                </span>
+                                            </div>
+                                            <span :class="['bdg', (item.role==='鏡像'||item.role==='清大組') ? 'bdg-mirror' : 'bdg-sat']">{{ item.role }}</span>
                                         </div>
-                                        <span :class="['bdg', item.role==='鏡像' ? 'bdg-mirror' : 'bdg-sat']">{{ item.role
-                                            }}</span>
+                                        <div style="display:flex;flex-direction:column;gap:2px;">
+                                            <a v-for="link in item.links" :href="link.disabled ? null : link.url"
+                                                :class="['li', link.disabled ? 'ld' : 'la']"
+                                                :target="link.disabled ? null : '_blank'"
+                                                @click="link.disabled && $event.preventDefault()"
+                                                @contextmenu.prevent="!link.disabled && handleRightClickCopy(link.url)"
+                                                :title="link.disabled ? '無效連結' : '左鍵開啟，右鍵複製'">
+                                                <i v-if="link.type==='folder'" class="fa-regular fa-folder-open li-ic"
+                                                    :style="link.disabled?'color:var(--t3)':'color:var(--amber)'"></i>
+                                                <i v-else-if="link.type==='sheet'" class="fa-solid fa-table li-ic"
+                                                    :style="link.disabled?'color:var(--t3)':'color:var(--green)'"></i>
+                                                <i v-else-if="link.type==='cool'" class="fa-solid fa-graduation-cap li-ic"
+                                                    :style="link.disabled?'color:var(--t3)':'color:var(--cyan)'"></i>
+                                                <i v-else-if="link.type==='cool_main'" class="fa-solid fa-graduation-cap li-ic"
+                                                    :style="link.disabled?'color:var(--t3)':'color:var(--amber)'"></i>
+                                                <i v-else-if="link.type==='cool_student'" class="fa-solid fa-graduation-cap li-ic"
+                                                    :style="link.disabled?'color:var(--t3)':'color:var(--cyan)'"></i>
+                                                <i v-else class="fa-solid fa-link li-ic" style="color:var(--t3);"></i>
+                                                <span
+                                                    style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{
+                                                    link.label }}</span>
+                                                <i v-if="!link.disabled" class="fa-solid fa-chevron-right li-chev"></i>
+                                            </a>
+                                        </div>
                                     </div>
-                                    <div style="display:flex;flex-direction:column;gap:2px;">
-                                        <a v-for="link in item.links" :href="link.disabled ? null : link.url"
-                                            :class="['li', link.disabled ? 'ld' : 'la']"
-                                            :target="link.disabled ? null : '_blank'"
-                                            @click="link.disabled && $event.preventDefault()"
-                                            @contextmenu.prevent="!link.disabled && handleRightClickCopy(link.url)"
-                                            :title="link.disabled ? '無效連結' : '左鍵開啟，右鍵複製'">
-                                            <i v-if="link.type==='folder'" class="fa-regular fa-folder-open li-ic"
-                                                :style="link.disabled?'color:var(--t3)':'color:var(--amber)'"></i>
-                                            <i v-else-if="link.type==='sheet'" class="fa-solid fa-table li-ic"
-                                                :style="link.disabled?'color:var(--t3)':'color:var(--green)'"></i>
-                                            <i v-else-if="link.type==='cool'" class="fa-solid fa-graduation-cap li-ic"
-                                                :style="link.disabled?'color:var(--t3)':'color:var(--cyan)'"></i>
-                                            <i v-else class="fa-solid fa-link li-ic" style="color:var(--t3);"></i>
-                                            <span
-                                                style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{
-                                                link.label }}</span>
-                                            <i v-if="!link.disabled" class="fa-solid fa-chevron-right li-chev"></i>
-                                        </a>
-                                    </div>
-                                </div>
+                                </template>
                             </div>
                         </div>
 
@@ -1040,7 +1054,19 @@
                                     <span
                                         style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;color:var(--purple);letter-spacing:.1em;">TARGET</span>
                                     <div class="tgt-grp">
-                                        <template v-if="selectedCourse?.type !== '鏡像課程'">
+                                        <template v-if="selectedCourse?.twoStep">
+                                            <button @click="setTableTarget('cool_main')"
+                                                :class="['tgt-btn', tableTarget==='cool_main'?'tf':'']">
+                                                <i class="fa-solid fa-graduation-cap" style="font-size:9px;"></i>主導課程
+                                            </button>
+                                            <div style="width:1px;background:var(--border);margin:2px 0;"></div>
+                                            <button @click="setTableTarget('cool_student')"
+                                                :class="['tgt-btn', tableTarget==='cool_student'?'tc':'']">
+                                                <i class="fa-solid fa-graduation-cap" style="font-size:9px;"></i>課程頁面
+                                            </button>
+                                            <div style="width:1px;background:var(--border);margin:2px 0;"></div>
+                                        </template>
+                                        <template v-else-if="selectedCourse?.type !== '鏡像課程'">
                                             <button @click="setTableTarget('cool')"
                                                 :class="['tgt-btn', tableTarget==='cool'?'tc':'']">
                                                 <i class="fa-solid fa-graduation-cap" style="font-size:9px;"></i>COOL
@@ -1057,7 +1083,7 @@
                                             <i class="fa-solid fa-table" style="font-size:9px;"></i>分頁
                                         </button>
                                     </div>
-                                    <template v-if="tableTarget === 'cool'">
+                                    <template v-if="tableTarget === 'cool' || tableTarget === 'cool_main' || tableTarget === 'cool_student'">
                                         <div style="width:1px;height:18px;background:var(--border2);flex-shrink:0;"></div>
                                         <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.1em;">PAGE</span>
                                         <div class="tgt-grp">
@@ -1078,7 +1104,7 @@
                                             </button>
                                         </div>
                                     </template>
-                                    <template v-if="selectedCourse?.type === '混合課程'">
+                                    <template v-if="selectedCourse?.type === '混合課程' || selectedCourse?.twoStep">
                                         <div style="width:1px;height:18px;background:var(--border2);flex-shrink:0;">
                                         </div>
                                         <span
@@ -1087,15 +1113,28 @@
                                             <button @click="setRoleFilter('全部')"
                                                 :class="['tgt-btn', roleFilter==='全部'?'tc':'']">全部</button>
                                             <div style="width:1px;background:var(--border);margin:2px 0;"></div>
-                                            <button @click="setRoleFilter('鏡像')"
-                                                :class="['tgt-btn', roleFilter==='鏡像'?'tm':'']">
-                                                <i class="fa-solid fa-circle-half-stroke" style="font-size:9px;"></i>鏡像
-                                            </button>
-                                            <div style="width:1px;background:var(--border);margin:2px 0;"></div>
-                                            <button @click="setRoleFilter('衛星')"
-                                                :class="['tgt-btn', roleFilter==='衛星'?'ts':'']">
-                                                <i class="fa-solid fa-satellite-dish" style="font-size:9px;"></i>衛星
-                                            </button>
+                                            <template v-if="selectedCourse?.twoStep">
+                                                <button @click="setRoleFilter('清大組')"
+                                                    :class="['tgt-btn', roleFilter==='清大組'?'tm':'']">
+                                                    <i class="fa-solid fa-circle-half-stroke" style="font-size:9px;"></i>清大組
+                                                </button>
+                                                <div style="width:1px;background:var(--border);margin:2px 0;"></div>
+                                                <button @click="setRoleFilter('各校組')"
+                                                    :class="['tgt-btn', roleFilter==='各校組'?'ts':'']">
+                                                    <i class="fa-solid fa-satellite-dish" style="font-size:9px;"></i>各校組
+                                                </button>
+                                            </template>
+                                            <template v-else>
+                                                <button @click="setRoleFilter('鏡像')"
+                                                    :class="['tgt-btn', roleFilter==='鏡像'?'tm':'']">
+                                                    <i class="fa-solid fa-circle-half-stroke" style="font-size:9px;"></i>鏡像
+                                                </button>
+                                                <div style="width:1px;background:var(--border);margin:2px 0;"></div>
+                                                <button @click="setRoleFilter('衛星')"
+                                                    :class="['tgt-btn', roleFilter==='衛星'?'ts':'']">
+                                                    <i class="fa-solid fa-satellite-dish" style="font-size:9px;"></i>衛星
+                                                </button>
+                                            </template>
                                         </div>
                                     </template>
                                 </div>
@@ -1127,6 +1166,10 @@
                                             <th>
                                                 <span v-if="tableTarget==='cool'"><i class="fa-solid fa-graduation-cap"
                                                         style="color:var(--cyan);margin-right:4px;font-size:9px;"></i>COOL</span>
+                                                <span v-else-if="tableTarget==='cool_main'"><i class="fa-solid fa-graduation-cap"
+                                                        style="color:var(--amber);margin-right:4px;font-size:9px;"></i>主導課程（旁聽生）</span>
+                                                <span v-else-if="tableTarget==='cool_student'"><i class="fa-solid fa-graduation-cap"
+                                                        style="color:var(--cyan);margin-right:4px;font-size:9px;"></i>課程頁面（學生）</span>
                                                 <span v-else-if="tableTarget==='folder'"><i
                                                         class="fa-regular fa-folder-open"
                                                         style="color:var(--amber);margin-right:4px;font-size:9px;"></i>資料夾</span>
@@ -1152,7 +1195,7 @@
                                                         :style="isRowSelected(index)?'color:var(--cyan)':'color:var(--t1)'">{{
                                                         item.school }}</span>
                                                     <span v-if="item.isHost" class="bdg bdg-host">開課</span>
-                                                    <span :class="['bdg', item.role==='鏡像'?'bdg-mirror':'bdg-sat']">{{
+                                                    <span :class="['bdg', (item.role==='鏡像'||item.role==='清大組')?'bdg-mirror':'bdg-sat']">{{
                                                         item.role }}</span>
                                                 </div>
                                             </td>
@@ -1162,10 +1205,10 @@
                                                         style="font-family:'IBM Plex Mono',monospace;font-size:10px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:400px;"
                                                         :style="isRowSelected(index)?'color:var(--cyan)':'color:var(--t3)'">
                                                         {{ getTargetLink(item).disabled ? '— 無有效連結 —' :
-                                                        getTargetLink(item).url + (tableTarget === 'cool' ? coolSuffix : '') }}
+                                                        getTargetLink(item).url + (['cool','cool_main','cool_student'].includes(tableTarget) ? coolSuffix : '') }}
                                                     </span>
                                                     <a v-if="!getTargetLink(item).disabled"
-                                                        :href="getTargetLink(item).url + (tableTarget === 'cool' ? coolSuffix : '')" target="_blank" class="row-open"
+                                                        :href="getTargetLink(item).url + (['cool','cool_main','cool_student'].includes(tableTarget) ? coolSuffix : '')" target="_blank" class="row-open"
                                                         title="在新分頁開啟" @mousedown.stop>
                                                         <i class="fa-solid fa-external-link-alt"></i>
                                                     </a>
@@ -1366,7 +1409,7 @@
                         const keyword = normalize(searchKeyword.value);
                         schools = schools.filter(s => normalize(s.school).includes(keyword));
                     }
-                    if (viewMode.value === 'table' && selectedCourse.value.type === '混合課程' && roleFilter.value !== '全部') {
+                    if (viewMode.value === 'table' && (selectedCourse.value.type === '混合課程' || selectedCourse.value.twoStep) && roleFilter.value !== '全部') {
                         schools = schools.filter(s => s.role === roleFilter.value);
                     }
                     // 混合課程卡片模式依指定順序排列
@@ -1381,11 +1424,14 @@
                 const getEffectiveUrl = (item) => {
                     const link = getTargetLink(item);
                     if (!link || link.disabled) return null;
-                    return link.url + (tableTarget.value === 'cool' ? coolSuffix.value : '');
+                    const isCool = ['cool', 'cool_main', 'cool_student'].includes(tableTarget.value);
+                    return link.url + (isCool ? coolSuffix.value : '');
                 };
 
                 const targetLabel = computed(() => {
                     if (tableTarget.value === 'cool') return 'COOL';
+                    if (tableTarget.value === 'cool_main') return '主導課程';
+                    if (tableTarget.value === 'cool_student') return '課程頁面';
                     if (tableTarget.value === 'folder') return '資料夾';
                     if (tableTarget.value === 'sheet') return '分頁';
                     return '';
@@ -1403,7 +1449,7 @@
                     selectedCourse.value = course;
                     viewMode.value = 'card';
                     tableSelection.clear();
-                    tableTarget.value = course.type === '鏡像課程' ? 'folder' : 'cool';
+                    tableTarget.value = course.twoStep ? 'cool_main' : course.type === '鏡像課程' ? 'folder' : 'cool';
                     roleFilter.value = '全部';
                     coolSuffix.value = '';
                 };
