@@ -1043,32 +1043,28 @@
 
                         <!-- Table view -->
                         <div v-else style="display:flex;flex-direction:column;">
-                            <div class="tbl-ctrl">
-                                <div style="display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap;">
-                                    <span
-                                        style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;color:var(--purple);letter-spacing:.1em;">TARGET</span>
+                            <div class="tbl-ctrl" style="flex-direction:column;align-items:stretch;gap:0;">
+                                <!-- 第一列：TARGET + PAGE + 複製按鈕 -->
+                                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                                    <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;color:var(--purple);letter-spacing:.1em;">TARGET</span>
                                     <div class="tgt-grp">
                                         <template v-if="selectedCourse?.twoStep">
-                                            <button @click="setTableTarget('cool_student')"
-                                                :class="['tgt-btn', tableTarget==='cool_student'?'tc':'']">
+                                            <button @click="setTableTarget('cool_student')" :class="['tgt-btn', tableTarget==='cool_student'?'tc':'']">
                                                 <i class="fa-solid fa-graduation-cap" style="font-size:9px;"></i>課程頁面
                                             </button>
                                             <div style="width:1px;background:var(--border);margin:2px 0;"></div>
                                         </template>
                                         <template v-else-if="selectedCourse?.type !== '鏡像課程'">
-                                            <button @click="setTableTarget('cool')"
-                                                :class="['tgt-btn', tableTarget==='cool'?'tc':'']">
+                                            <button @click="setTableTarget('cool')" :class="['tgt-btn', tableTarget==='cool'?'tc':'']">
                                                 <i class="fa-solid fa-graduation-cap" style="font-size:9px;"></i>COOL
                                             </button>
                                             <div style="width:1px;background:var(--border);margin:2px 0;"></div>
                                         </template>
-                                        <button @click="setTableTarget('folder')"
-                                            :class="['tgt-btn', tableTarget==='folder'?'tf':'']">
+                                        <button @click="setTableTarget('folder')" :class="['tgt-btn', tableTarget==='folder'?'tf':'']">
                                             <i class="fa-regular fa-folder-open" style="font-size:9px;"></i>資料夾
                                         </button>
                                         <div style="width:1px;background:var(--border);margin:2px 0;"></div>
-                                        <button @click="setTableTarget('sheet')"
-                                            :class="['tgt-btn', tableTarget==='sheet'?'ts':'']">
+                                        <button @click="setTableTarget('sheet')" :class="['tgt-btn', tableTarget==='sheet'?'ts':'']">
                                             <i class="fa-solid fa-table" style="font-size:9px;"></i>分頁
                                         </button>
                                     </div>
@@ -1076,68 +1072,50 @@
                                         <div style="width:1px;height:18px;background:var(--border2);flex-shrink:0;"></div>
                                         <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.1em;">PAGE</span>
                                         <div class="tgt-grp">
-                                            <button @click="coolSuffix = ''" :class="['tgt-btn', coolSuffix===''?'tc':'']">
-                                                <i class="fa-solid fa-house" style="font-size:9px;"></i>首頁
-                                            </button>
+                                            <button @click="coolSuffix = ''" :class="['tgt-btn', coolSuffix===''?'tc':'']"><i class="fa-solid fa-house" style="font-size:9px;"></i>首頁</button>
                                             <div style="width:1px;background:var(--border);margin:2px 0;"></div>
-                                            <button @click="coolSuffix = '/users'" :class="['tgt-btn', coolSuffix==='/users'?'tc':'']">
-                                                <i class="fa-solid fa-users" style="font-size:9px;"></i>成員
-                                            </button>
+                                            <button @click="coolSuffix = '/users'" :class="['tgt-btn', coolSuffix==='/users'?'tc':'']"><i class="fa-solid fa-users" style="font-size:9px;"></i>成員</button>
                                             <div style="width:1px;background:var(--border);margin:2px 0;"></div>
-                                            <button @click="coolSuffix = '/assignments'" :class="['tgt-btn', coolSuffix==='/assignments'?'tc':'']">
-                                                <i class="fa-solid fa-clipboard-list" style="font-size:9px;"></i>作業
-                                            </button>
+                                            <button @click="coolSuffix = '/assignments'" :class="['tgt-btn', coolSuffix==='/assignments'?'tc':'']"><i class="fa-solid fa-clipboard-list" style="font-size:9px;"></i>作業</button>
                                             <div style="width:1px;background:var(--border);margin:2px 0;"></div>
-                                            <button @click="coolSuffix = '/settings'" :class="['tgt-btn', coolSuffix==='/settings'?'tc':'']">
-                                                <i class="fa-solid fa-gear" style="font-size:9px;"></i>設定
-                                            </button>
+                                            <button @click="coolSuffix = '/settings'" :class="['tgt-btn', coolSuffix==='/settings'?'tc':'']"><i class="fa-solid fa-gear" style="font-size:9px;"></i>設定</button>
                                         </div>
                                     </template>
-                                    <template v-if="selectedCourse?.type === '混合課程' || selectedCourse?.twoStep">
-                                        <div style="width:1px;height:18px;background:var(--border2);flex-shrink:0;">
-                                        </div>
-                                        <span
-                                            style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.1em;">ROLE</span>
-                                        <div class="tgt-grp">
-                                            <button @click="setRoleFilter('全部')"
-                                                :class="['tgt-btn', roleFilter==='全部'?'tc':'']">全部</button>
-                                            <div style="width:1px;background:var(--border);margin:2px 0;"></div>
-                                            <template v-if="selectedCourse?.twoStep">
-                                                <button @click="setRoleFilter('清大組')"
-                                                    :class="['tgt-btn', roleFilter==='清大組'?'tm':'']">
-                                                    <i class="fa-solid fa-circle-half-stroke" style="font-size:9px;"></i>清大組
-                                                </button>
-                                                <div style="width:1px;background:var(--border);margin:2px 0;"></div>
-                                                <button @click="setRoleFilter('各校組')"
-                                                    :class="['tgt-btn', roleFilter==='各校組'?'ts':'']">
-                                                    <i class="fa-solid fa-satellite-dish" style="font-size:9px;"></i>各校組
-                                                </button>
-                                            </template>
-                                            <template v-else>
-                                                <button @click="setRoleFilter('鏡像')"
-                                                    :class="['tgt-btn', roleFilter==='鏡像'?'tm':'']">
-                                                    <i class="fa-solid fa-circle-half-stroke" style="font-size:9px;"></i>鏡像
-                                                </button>
-                                                <div style="width:1px;background:var(--border);margin:2px 0;"></div>
-                                                <button @click="setRoleFilter('衛星')"
-                                                    :class="['tgt-btn', roleFilter==='衛星'?'ts':'']">
-                                                    <i class="fa-solid fa-satellite-dish" style="font-size:9px;"></i>衛星
-                                                </button>
-                                            </template>
-                                        </div>
-                                    </template>
+                                    <div style="flex:1;"></div>
+                                    <div :style="consolidatedUrl ? 'visibility:hidden;pointer-events:none' : ''" style="display:flex;align-items:center;gap:8px;">
+                                        <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--t3);">drag · shift · ctrl+c</span>
+                                        <span v-if="tableSelection.size > 0" style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;background:var(--cyan-dim);padding:3px 9px;border-radius:4px;border:1px solid rgba(42,79,170,.28);color:var(--cyan);">{{ tableSelection.size }} selected</span>
+                                        <button @click="copyAllLinks" class="copy-all-btn">
+                                            <i class="fa-regular fa-copy"></i>全部複製 ({{ filteredSchools.length }})
+                                        </button>
+                                    </div>
                                 </div>
-                                <div :style="consolidatedUrl ? 'visibility:hidden;pointer-events:none' : ''" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                                    <span
-                                        style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--t3);">drag
-                                        · shift · ctrl+c</span>
-                                    <span v-if="tableSelection.size > 0"
-                                        style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;background:var(--cyan-dim);padding:3px 9px;border-radius:4px;border:1px solid rgba(42,79,170,.28);color:var(--cyan);">
-                                        {{ tableSelection.size }} selected
-                                    </span>
-                                    <button @click="copyAllLinks" class="copy-all-btn">
-                                        <i class="fa-regular fa-copy"></i>全部複製 ({{ filteredSchools.length }})
-                                    </button>
+                                <!-- 第二列：ROLE（獨立一行，避免換行跳動）-->
+                                <div v-if="selectedCourse?.type === '混合課程' || selectedCourse?.twoStep"
+                                    style="display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);margin-top:7px;padding-top:7px;">
+                                    <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.1em;">ROLE</span>
+                                    <div class="tgt-grp">
+                                        <button @click="setRoleFilter('全部')" :class="['tgt-btn', roleFilter==='全部'?'tc':'']">全部</button>
+                                        <div style="width:1px;background:var(--border);margin:2px 0;"></div>
+                                        <template v-if="selectedCourse?.twoStep">
+                                            <button @click="setRoleFilter('清大組')" :class="['tgt-btn', roleFilter==='清大組'?'tm':'']">
+                                                <i class="fa-solid fa-circle-half-stroke" style="font-size:9px;"></i>清大組
+                                            </button>
+                                            <div style="width:1px;background:var(--border);margin:2px 0;"></div>
+                                            <button @click="setRoleFilter('各校組')" :class="['tgt-btn', roleFilter==='各校組'?'ts':'']">
+                                                <i class="fa-solid fa-satellite-dish" style="font-size:9px;"></i>各校組
+                                            </button>
+                                        </template>
+                                        <template v-else>
+                                            <button @click="setRoleFilter('鏡像')" :class="['tgt-btn', roleFilter==='鏡像'?'tm':'']">
+                                                <i class="fa-solid fa-circle-half-stroke" style="font-size:9px;"></i>鏡像
+                                            </button>
+                                            <div style="width:1px;background:var(--border);margin:2px 0;"></div>
+                                            <button @click="setRoleFilter('衛星')" :class="['tgt-btn', roleFilter==='衛星'?'ts':'']">
+                                                <i class="fa-solid fa-satellite-dish" style="font-size:9px;"></i>衛星
+                                            </button>
+                                        </template>
+                                    </div>
                                 </div>
                             </div>
 
