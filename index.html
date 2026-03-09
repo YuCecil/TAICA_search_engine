@@ -1127,7 +1127,7 @@
                                         </div>
                                     </template>
                                 </div>
-                                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                                <div v-if="!consolidatedUrl" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                                     <span
                                         style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--t3);">drag
                                         · shift · ctrl+c</span>
@@ -1141,7 +1141,26 @@
                                 </div>
                             </div>
 
-                            <div ref="tableContainer" class="cscroll" style="overflow:auto;max-height:70vh;">
+                            <!-- 合併檢視：所有學校共用同一連結時顯示 -->
+                            <div v-if="consolidatedUrl" style="padding:22px 24px;display:flex;flex-direction:column;gap:14px;">
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <i class="fa-solid fa-graduation-cap" style="color:var(--cyan);font-size:13px;"></i>
+                                    <span style="font-weight:700;font-size:13px;color:var(--t1);">{{ filteredSchools.length }} 所學校共用同一課程頁面連結</span>
+                                </div>
+                                <code style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--cyan);background:var(--cyan-dim);border:1px solid rgba(42,79,170,.18);padding:10px 14px;border-radius:6px;word-break:break-all;display:block;">{{ consolidatedUrl }}</code>
+                                <button @click="copyToClipboard(consolidatedUrl, 1, true)" style="align-self:flex-start;display:flex;align-items:center;gap:7px;background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(42,79,170,.28);font-size:12px;font-weight:600;padding:7px 16px;border-radius:6px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;">
+                                    <i class="fa-regular fa-copy"></i>複製連結
+                                </button>
+                                <div style="border-top:1px solid var(--border);padding-top:12px;">
+                                    <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--t3);margin-bottom:7px;letter-spacing:.08em;">SCHOOLS</div>
+                                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                                        <span v-for="item in filteredSchools" :key="item.school" style="font-size:11px;padding:3px 9px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--t2);">{{ item.school }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 一般表格 -->
+                            <div v-else ref="tableContainer" class="cscroll" style="overflow:auto;max-height:70vh;">
                                 <table class="dtbl">
                                     <thead>
                                         <tr>
@@ -1417,6 +1436,17 @@
                     return link.url + (isCool ? coolSuffix.value : '');
                 };
 
+                // 偵測所有可見學校是否共用同一連結（用於合併檢視）
+                const consolidatedUrl = computed(() => {
+                    if (!selectedCourse.value?.twoStep) return null;
+                    if (tableTarget.value !== 'cool_student') return null;
+                    const urls = filteredSchools.value
+                        .map(item => getEffectiveUrl(item))
+                        .filter(u => u !== null);
+                    if (urls.length === 0) return null;
+                    return urls.every(u => u === urls[0]) ? urls[0] : null;
+                });
+
                 const targetLabel = computed(() => {
                     if (tableTarget.value === 'cool') return 'COOL';
                     if (tableTarget.value === 'cool_main') return '主導課程';
@@ -1651,7 +1681,7 @@
                     isRowSelected, getTargetLink, copyTableSelection, openTableSelection, showToast, toastMessage,
                     selectType, selectCourse, tableTarget, setTableTarget, targetLabel,
                     copyAllLinks, openSingleRow, handleRightClickCopy, generalLinks,
-                    roleFilter, setRoleFilter, coolSuffix,
+                    roleFilter, setRoleFilter, coolSuffix, consolidatedUrl, copyToClipboard,
                     allSelected, someSelected, toggleSelectAll
                 };
             }
