@@ -1127,7 +1127,7 @@
                                         </div>
                                     </template>
                                 </div>
-                                <div v-if="!consolidatedUrl" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                                <div :style="consolidatedUrl ? 'visibility:hidden;pointer-events:none' : ''" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                                     <span
                                         style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--t3);">drag
                                         · shift · ctrl+c</span>
@@ -1147,7 +1147,7 @@
                                     <i class="fa-solid fa-graduation-cap" style="color:var(--cyan);font-size:13px;"></i>
                                     <span style="font-weight:700;font-size:13px;color:var(--t1);">{{ filteredSchools.length }} 所學校共用同一課程頁面連結</span>
                                 </div>
-                                <code style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--cyan);background:var(--cyan-dim);border:1px solid rgba(42,79,170,.18);padding:10px 14px;border-radius:6px;word-break:break-all;display:block;">{{ consolidatedUrl }}</code>
+                                <a :href="consolidatedUrl" target="_blank" @dblclick.prevent="() => window.open(consolidatedUrl, '_blank')" @contextmenu.prevent="handleRightClickCopy(consolidatedUrl)" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--cyan);background:var(--cyan-dim);border:1px solid rgba(42,79,170,.18);padding:10px 14px;border-radius:6px;word-break:break-all;display:block;text-decoration:none;cursor:pointer;" title="單擊開啟，右鍵複製">{{ consolidatedUrl }}</a>
                                 <button @click="copyToClipboard(consolidatedUrl, 1, true)" style="align-self:flex-start;display:flex;align-items:center;gap:7px;background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(42,79,170,.28);font-size:12px;font-weight:600;padding:7px 16px;border-radius:6px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;">
                                     <i class="fa-regular fa-copy"></i>複製連結
                                 </button>
