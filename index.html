@@ -1001,7 +1001,7 @@
                                     <div v-if="selectedCourse?.twoStep && (idx === 0 || item.role !== filteredSchools[idx-1].role)"
                                         :style="'grid-column:1/-1;border-radius:7px;padding:9px 14px;display:flex;align-items:center;gap:10px;' + (idx > 0 ? 'margin-top:6px;' : '') + (item.role==='清大組' ? 'background:var(--purple-dim);border:1px solid rgba(26,107,116,.22);' : 'background:var(--green-dim);border:1px solid rgba(79,118,32,.22);')">
                                         <span style="font-size:13px;font-weight:700;white-space:nowrap;" :style="item.role==='清大組'?'color:var(--purple)':'color:var(--green)'">{{ item.role }}</span>
-                                        <span style="font-size:11px;color:var(--t2);">{{ item.role === '清大組' ? '學生加入清大課程頁面，旁聽生加入主導課程' : '學生加入本校衛星課程頁面，旁聽生加入主導課程' }}</span>
+                                        <span style="font-size:11px;color:var(--t2);">{{ item.role === '清大組' ? '以學生身分加入清大課程頁面，以旁聽生身分加入主導課程' : '以學生身分加入本校衛星課程頁面，以旁聽生身分加入主導課程' }}</span>
                                     </div>
                                     <div :class="['scard', item.isHost ? 'is-host' : '']">
                                         <div class="scard-div">
