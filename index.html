@@ -887,23 +887,6 @@
                     </div>
                 </div>
 
-                <!-- Bulk open actions -->
-                <div class="panel" style="padding:10px 11px;flex-shrink:0;">
-                    <span class="s-label" style="margin-bottom:7px;display:block;">批量開啟</span>
-                    <div style="display:flex;flex-direction:column;gap:5px;">
-                        <button @click="openAllMainCool" style="display:flex;align-items:center;gap:7px;background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(42,79,170,.22);font-size:11px;font-weight:600;padding:5px 10px;border-radius:5px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;transition:all .14s;width:100%;" @mouseenter="$event.target.style.background='rgba(42,79,170,.14)'" @mouseleave="$event.target.style.background='var(--cyan-dim)'">
-                            <i class="fa-solid fa-graduation-cap" style="font-size:9px;flex-shrink:0;"></i>
-                            <span style="flex:1;text-align:left;">所有主導課程</span>
-                            <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;opacity:.7;">{{ allMainCoolUrls.length }}</span>
-                        </button>
-                        <button @click="openAllRosters" style="display:flex;align-items:center;gap:7px;background:var(--amber-dim);color:var(--amber);border:1px solid rgba(194,65,40,.22);font-size:11px;font-weight:600;padding:5px 10px;border-radius:5px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;transition:all .14s;width:100%;" @mouseenter="$event.target.style.background='rgba(194,65,40,.14)'" @mouseleave="$event.target.style.background='var(--amber-dim)'">
-                            <i class="fa-regular fa-folder-open" style="font-size:9px;flex-shrink:0;"></i>
-                            <span style="flex:1;text-align:left;">所有名單總表</span>
-                            <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;opacity:.7;">{{ allRosterUrls.length }}</span>
-                        </button>
-                    </div>
-                </div>
-
                 <!-- Course list -->
                 <div class="panel" style="flex:1;overflow:hidden;display:flex;flex-direction:column;">
                     <div style="padding:9px 13px 7px;border-bottom:1px solid var(--border);flex-shrink:0;">
@@ -946,6 +929,20 @@
 
             <!-- Content -->
             <section class="content-col">
+
+                <!-- Bulk open actions -->
+                <div class="panel" style="padding:9px 13px;flex-shrink:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <span class="s-label" style="white-space:nowrap;">批量開啟</span>
+                    <div style="width:1px;height:14px;background:var(--border2);"></div>
+                    <button @click="openAllMainCool" style="display:flex;align-items:center;gap:6px;background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(42,79,170,.22);font-size:11px;font-weight:600;padding:4px 11px;border-radius:5px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;transition:all .14s;">
+                        <i class="fa-solid fa-graduation-cap" style="font-size:9px;"></i>所有主導課程
+                        <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;opacity:.6;">{{ allMainCoolUrls.length }}</span>
+                    </button>
+                    <button @click="openAllRosters" style="display:flex;align-items:center;gap:6px;background:var(--amber-dim);color:var(--amber);border:1px solid rgba(194,65,40,.22);font-size:11px;font-weight:600;padding:4px 11px;border-radius:5px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;transition:all .14s;">
+                        <i class="fa-regular fa-folder-open" style="font-size:9px;"></i>所有名單總表
+                        <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;opacity:.6;">{{ allRosterUrls.length }}</span>
+                    </button>
+                </div>
 
                 <div v-if="!selectedCourse" class="empty-pane">
                     <i class="fa-regular fa-hand-point-left" style="font-size:26px;"></i>
