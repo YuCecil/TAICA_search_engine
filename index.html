@@ -856,7 +856,7 @@
                 </div>
                 <div class="hdr-search-wrap">
                     <i class="fa-solid fa-magnifying-glass hdr-search-icon"></i>
-                    <input v-model="searchKeyword" type="text" placeholder="搜尋學校名稱…" class="hdr-search" @keydown.stop>
+                    <input v-model="searchKeyword" type="text" placeholder="搜尋學校名稱…" class="hdr-search" @keydown.stop @focus="searchKeyword = ''">
                 </div>
             </div>
         </header>
